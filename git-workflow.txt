@@ -1,0 +1,28 @@
+Matt here. I'm posting about the way that we should use git for this project, since David asked about it. 
+I'm assuming yout guys have done the basics (cloning the repository, etc...). This is a step by step guide for how you should approach and upload your work to github.
+
+Step 1: Send a text in the Whatsapp group telling us what file you are working on. If two people work on the same file, it will be a pain to get the files straight again. Don't work on the same file as someone else until they've pushed to github.
+
+Step 2: Open your command line. Naviagate to the project folder. Ensure that everything is working by typing "git status"
+
+Step 3: Type "git pull" to get the most up-to-date version of the repository
+
+Step 4: Type "git branch (insert branch name here)" to create a new branch where you will make all your changes
+
+Step 5: Navigate to the new branch with "git checkout (insert branch name)"
+
+Step 6: Make any changes to the file you are working on
+
+Step 7: Type "git add --all" and "git commit -m "insert message here"" to add our files and commit like normal
+
+Step 8: Navigate back to the main branch with "git checkout main"
+
+Step 9: Merge you branch with main using "git merge (insert branch name)"
+
+Step 10: Push to guthub with "git push"
+
+Step 10: Delete the branch with "git branch --delete (insert branch name)"
+
+Step 11: "git pull" to ensure that you are up to date with all changes.
+
+Do this every time you make an edit so we don't get caught in a web of individual changes
