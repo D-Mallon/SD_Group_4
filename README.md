@@ -1,1 +1,5 @@
-[to be updated at a later date, if required for completed product]
+The overall goal of this application is to provide information for users on the Dublin bikes srevices, including station locations, bike capacities, weather, routes, etc.... To this end, the application makes use of a database hosted on AWS, and automated web scrapers to periodically pull data from relevant APIs and write it to the database. This information forms the basis of a web application, with the aforementioend functionalities. 
+
+Files:
+
+1. YML Environment: Contains the configurations for the python applications 
