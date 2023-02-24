@@ -3,3 +3,7 @@ The overall goal of this application is to provide information for users on the 
 Files:
 
 1. YML Environment: Contains the configurations for the python applications 
+
+2. Open Weather API Scraper: Web scraper to periodically collect weather information for Dublin, Ireland
+
+3. Dublin Bikes API Scraper: Web scraper to periodcically collect information on the Dublin Bikes stations
