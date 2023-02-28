@@ -9,3 +9,4 @@ params={"apiKey":'cd0f042a0fe994456333c463ac937795b92de9eb',
 response = requests.get("https://api.jcdecaux.com/vls/v1/stations/42?apiKey=cd0f042a0fe994456333c463ac937795b92de9eb&contract=dublin")
 data = response.text
 data = json.loads(data)
+print(data)
