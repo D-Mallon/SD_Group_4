@@ -1,0 +1,33 @@
+import pymysql
+import sqlalchemy as sqla
+from sqlalchemy import create_engine
+import traceback
+import glob
+import os
+from pprint import pprint
+import simplejson as json
+import requests
+import time
+from IPython.display import display
+
+USER = 'admin'
+PASSWORD = 'COMP30830Group4!'
+DB = 'database-1'
+URI = 'database-1.cvxwaiug5irm.eu-west-1.rds.amazonaws.com'
+PORT = '3306'
+
+connection = pymysql.connect(host=URI,
+                             user=USER,
+                             password=PASSWORD,
+                             database=DB,
+                             cursorclass=pymysql.cursors.DictCursor)
+
+
+sql = """
+CREATE DATABASE IF NOT EXISTS dbikes;
+"""
+
+with connection:
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+
