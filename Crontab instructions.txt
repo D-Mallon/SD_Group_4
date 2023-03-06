@@ -9,3 +9,9 @@ How to set up our Crontab
 4. 33 21 * * * echo "testing timer" >> /tmp/crontab_test1.txt was the sample I used. Need to trial it with our python code. Should be something like 
 
 5 * * * * python /path/to/filename.py
+
+Comment: this command below was the one I had to run on my test file
+
+*/5 * * * * /Users/dmallon/opt/anaconda3/envs/COMP30830Project/bin/python /Users/dmallon/add_date.py
+
+Command "which python" had to be run to give me the python link to input into the code.
