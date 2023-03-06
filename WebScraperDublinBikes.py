@@ -1,17 +1,13 @@
 import requests
 import json
-import mysql.connector
 
-#Connector information for main RDS database
-mydb = mysql.connector.connect(
-host = "",
-user="",
-password = "")
-mycursor = mydb.cursor()
+r = requests.get("https://api.jcdecaux.com/vls/v1/stations",
+params={"apiKey":'cd0f042a0fe994456333c463ac937795b92de9eb',
+"contract": "dublin"})
+(json.loads(r.text))
 
-#Openweather API connection and loading data
-weatherurl="https://api.openweathermap.org/data/2.5/weather?q=Dublin,IE&appid=648a779d29f9bffe54fe92440bd0a303"
-weatherreq = requests.get(weatherurl)
-weatherdata = json.loads(weatherreq.text)
 
-mycursor.execute("insert sql")
+response = requests.get("https://api.jcdecaux.com/vls/v1/stations/42?apiKey=cd0f042a0fe994456333c463ac937795b92de9eb&contract=dublin")
+data = response.text
+data = json.loads(data)
+print(data)
