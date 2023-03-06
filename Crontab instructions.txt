@@ -14,4 +14,10 @@ Comment: this command below was the one I had to run on my test file
 
 */5 * * * * /Users/dmallon/opt/anaconda3/envs/COMP30830Project/bin/python /Users/dmallon/add_date.py
 
-Command "which python" had to be run to give me the python link to input into the code.
+Command "which python" / "which python3.10" had to be run to give me the python link to input into the code.
+
+
+/usr/bin/python3.10
+/home/ubuntu/git/SD_Group_4/cron_test.py
+
+Sample: */1 * * * * /usr/bin/python3.10 /home/ubuntu/git/SD_Group_4/cron_test.py
