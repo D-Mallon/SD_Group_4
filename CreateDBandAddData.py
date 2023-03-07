@@ -38,9 +38,8 @@ for i in range(1,43):
     capacity = data['bike_stands']
     status = data['status']
 
-    sql = f"""
-    USE comp30830project; 
-    INSERT INTO DynamicBikeData VALUES ({availableBikes}, {capacity},{status},{location});"""
+    sql = "INSERT INTO comp30830project.DynamicBikeData VALUES (%s,%s,%s,%s)" 
+    val  = (availableBikes,capacity,status,location)
 
-    mycursor.execute(sql)
+    mycursor.execute(sql,val)
     mydb.commit()
