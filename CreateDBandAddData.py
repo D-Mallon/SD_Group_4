@@ -5,9 +5,9 @@ import json
 
 #Connect to MySQLServer
 mydb = mysql.connector.connect(
-  host="localhost",
-  user="root",
-  password="UCD22GRMA"
+  host="***",
+  user="***",
+  password="***"
 )
 
 #Create DB if not already exists
@@ -21,16 +21,16 @@ except:
 
 #Dublin Bikes Data Pull
 r = requests.get("https://api.jcdecaux.com/vls/v1/stations",
-params={"apiKey":'cd0f042a0fe994456333c463ac937795b92de9eb',
+params={"apiKey":'',
 "contract": "dublin"})
 (json.loads(r.text))
 
-response = requests.get("https://api.jcdecaux.com/vls/v1/stations/42?apiKey=cd0f042a0fe994456333c463ac937795b92de9eb&contract=dublin")
+response = requests.get("https://api.jcdecaux.com/vls/v1/stations/42?apiKey=&contract=dublin")
 data = response.text
 BikeData = json.loads(data)
 
 for i in range(1,43):
-    response = requests.get(f"https://api.jcdecaux.com/vls/v1/stations/{i}?apiKey=cd0f042a0fe994456333c463ac937795b92de9eb&contract=dublin")
+    response = requests.get(f"https://api.jcdecaux.com/vls/v1/stations/{i}?apiKey=&contract=dublin")
     data = response.text
     data = json.loads(data)
     availableBikes = data['available_bikes']
