@@ -30,7 +30,7 @@ mydb = mysql.connector.connect(
 host = "",
 user="",
 password = "",
-database = "")
+database = "openweatherapi")
 mycursor = mydb.cursor()
 
 #creates tables in db
