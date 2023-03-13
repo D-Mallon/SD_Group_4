@@ -1,6 +1,7 @@
 import requests
 import json
 import mysql.connector
+import datetime
 
 #Connector information for main RDS database
 mydb = mysql.connector.connect(
@@ -14,46 +15,58 @@ weatherurl="https://api.openweathermap.org/data/2.5/weather?q=Dublin,IE&appid=64
 weatherreq = requests.get(weatherurl)
 weatherdata = json.loads(weatherreq.text)
 
-#creates initial tables in the db
-sqltables = """
+#creates initial db
+sqldb = """
 CREATE DATABASE IF NOT EXISTS openweatherapi;
-USE openweatherapi;
+"""
+
+mycursor.execute(sqldb)
+mydb.commit()
+mycursor.close()
+mydb.close()
+
+#recconects with proper db
+mydb = mysql.connector.connect(
+host = "",
+user="",
+password = "",
+database = "")
+mycursor = mydb.cursor()
+
+#creates tables in db
+sqltables = """
 CREATE TABLE IF NOT EXISTS Weather(
 Main VARCHAR(256),
 Temp FLOAT(24),
 Humidity FLOAT(24),
 WindSpeed FLOAT(24),
-DateTime DATE
-)
+DateTime DATETIME
+);
 """
-mycursor.execute(sqltables, multi=True)
+mycursor.execute(sqltables)
 
 #varaibles
 main = weatherdata.get("weather")[0].get("main")
 temp = weatherdata.get("main").get("temp")
 humidity = weatherdata.get("main").get("humidity")
 wind = weatherdata.get("wind").get("speed")
-datetime = date.today()
+datetime = datetime.datetime.now()
+print(main)
+print(temp)
+print(humidity)
+print(wind)
+print(datetime)
 
 #inserts varaibles into openweather table
-sqlupdate = f"""
-USE openweatherapi;
-INSERT INTO Weather (
-Main,
-Temp,
-Humidity,
-WindSpeed,
-DateTime
-)
-VALUES (
-{main},
-{temp},
-{humidity},
-{wind},
-{datetime}
-)
+sqlupdate = """
+INSERT INTO Weather (Main, Temp, Humidity, WindSpeed, Datetime) 
+VALUES (%s,%s,%s,%s,%s)
 """
 
-mycursor.execute(sqlupdate, multi=True)
+val = (main, temp, humidity, wind, datetime)
+
+mycursor.execute(sqlupdate, val)
 mydb.commit()
-print(mycursor.rowcount)
+print(f"Added {mycursor.rowcount} row of data")
+mycursor.close()
+mydb.close()
