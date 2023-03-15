@@ -29,7 +29,7 @@ response = requests.get("https://api.jcdecaux.com/vls/v1/stations/42?apiKey=&con
 data = response.text
 BikeData = json.loads(data)
 
-for i in range(1,43):
+for i in range(1,118):
     response = requests.get(f"https://api.jcdecaux.com/vls/v1/stations/{i}?apiKey=&contract=dublin")
     data = response.text
     data = json.loads(data)
