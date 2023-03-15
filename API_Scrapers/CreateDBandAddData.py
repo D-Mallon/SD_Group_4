@@ -14,7 +14,7 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor()
 try:
     mycursor.execute("CREATE DATABASE comp30830project")
-    mycursor.execute("use comp30830project; CREATE TABLE DynamicBikeData (AvailableBike INT, Capacity INT, Status VARCHAR(255),Location VARCHAR(255))")
+    mycursor.execute("use comp30830project; CREATE TABLE DynamicBikeData (ID INT, AvailableBike INT, Capacity INT, Status VARCHAR(255),Location VARCHAR(255))")
 except:
     print("DataBase already exists")
 
@@ -37,9 +37,10 @@ for i in range(1,43):
     location = str(data['position']['lat'])+str(data['position']['lng'])
     capacity = data['bike_stands']
     status = data['status']
+    id = data['number']
 
-    sql = "INSERT INTO comp30830project.DynamicBikeData VALUES (%s,%s,%s,%s)" 
-    val  = (availableBikes,capacity,status,location)
+    sql = "INSERT INTO comp30830project.DynamicBikeData VALUES (%s,%s,%s,%s,%s)" 
+    val  = (id,availableBikes,capacity,status,location)
 
     mycursor.execute(sql,val)
     mydb.commit()
