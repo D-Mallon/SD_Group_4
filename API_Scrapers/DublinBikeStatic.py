@@ -33,7 +33,7 @@ mydb = mysql.connector.connect(
 host = "",
 user="",
 password = "",
-database = "")
+database = "DBikeStatic")
 mycursor = mydb.cursor()
 
 #creates tables in dbikestatic
