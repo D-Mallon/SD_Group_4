@@ -5,9 +5,9 @@ import datetime
 
 #Connect to MySQLServer
 mydb = mysql.connector.connect(
-  host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
-  user="admin",
-  password="COMP30830Group4!"
+  host="",
+  user="",
+  password=""
 )
 
 #Create DB if not already exists
@@ -23,7 +23,7 @@ numls = [42, 30, 54, 108, 20, 56, 6, 18, 32, 52, 48, 13, 43, 31, 98, 14, 1, 23, 
 88]
 
 for i in numls:
-    response = requests.get(f"https://api.jcdecaux.com/vls/v1/stations/{i}?apiKey=cd0f042a0fe994456333c463ac937795b92de9eb&contract=dublin")
+    response = requests.get(f"https://api.jcdecaux.com/vls/v1/stations/{i}?apiKey=&contract=dublin")
     data = response.text
     data = json.loads(data)
     availableBikes = data['available_bikes']
