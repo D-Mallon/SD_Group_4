@@ -3,8 +3,8 @@ import requests
 import json
 import datetime
 
+#connects and creates database if not exists. 
 try:
-  #Connect to MySQLServer
     mydb = mysql.connector.connect(
     host="",
     user="",
@@ -12,7 +12,7 @@ try:
     )
     mycursor = mydb.cursor()
 
-    #create table if not exists
+    #create db if not exists
     sqldb = """
     CREATE DATABASE IF NOT EXISTS DBikeDynamicV2;
     """
@@ -25,7 +25,7 @@ except:
 
 
 
-#Connect to MySQLServer
+#Connect to MySQLServer with proper db
 mydb = mysql.connector.connect(
   host="",
   user="",
@@ -34,6 +34,7 @@ mydb = mysql.connector.connect(
 )
 mycursor = mydb.cursor()
 
+#create table if not exists
 try:
     sqltable = """
     CREATE TABLE IF NOT EXISTS Dynamic (
