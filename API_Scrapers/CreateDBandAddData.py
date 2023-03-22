@@ -5,9 +5,9 @@ import datetime
 
 #Connect to MySQLServer
 mydb = mysql.connector.connect(
-  host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
-  user="admin",
-  password="COMP30830Group4!"
+  host="",
+  user="",
+  password=""
 )
 
 #Create DB if not already exists
