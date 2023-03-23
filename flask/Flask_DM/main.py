@@ -1,16 +1,27 @@
-from flask import Flask, redirect, url_for, render_template, request
+from flask import Flask, render_template
+import mysql.connector
 
 app = Flask(__name__)
 
-@app.route("/<name>")
-def home(name):
-    return render_template("index.html", content=["Tim", "Bob", "Joe"])
+# Connect to the database
+mydb = mysql.connector.connect(
+  host="",
+  user="",
+  password="",
+  database=""
+)
 
+# Define a route to display the data
+@app.route("/")
+def index():
+    # Retrieve the data from the database
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT * FROM Stations")
+    data = mycursor.fetchall()
+    mycursor.close()
 
-
-# @app.route("/<name>")
-# def user(name):
-#     return f"Hello {name}!"
+    # Pass the data to the template and render it
+    return render_template("index.html", data=data)
 
 if __name__ == "__main__":
-    app.run(debug = True)
+    app.run(debug=True)
