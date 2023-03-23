@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Home Page</title>
+  </head>
+  <body>
+    <h1>Home Page!</h1>
+    <p>Here is some text</p>
+    {% for x in range(10) %} {% if x %2 ==1 %}
+    <p>{{x}} is odd</p>
+    {% else %}
+    <p>{{x}} is even</p>
+    {% endif %} {% endfor %} {% for y in content%}
+    <p>{{y}}</p>
+    {% endfor %}
+    <p>Here is some more text</p>
+  </body>
+</html>
