@@ -8,7 +8,7 @@ mydb = mysql.connector.connect(
   host="",
   user="",
   password="",
-  database=""
+  database="DBikeStatic"
 )
 
 # Define a route to display the data

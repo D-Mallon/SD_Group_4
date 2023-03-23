@@ -3,40 +3,10 @@
   <head>
     <title>Home</title>
     <meta charset="utf-8" />
-  </head>
-  <body>
-    <iframe
-      width="600"
-      height="450"
-      style="border: 0"
-      loading="lazy"
-      allowfullscreen
-      referrerpolicy="no-referrer-when-downgrade"
-      src="https://www.google.com/maps/embed/v1/place?key=&q=Dublin,Ireland"
-    >
-    </iframe>
-    <ul>
-      {% for row in data %}
-      <li>{{ row[1] }} ({{ row[2] }}, {{ row[3] }})</li>
-      {% endfor %}
-    </ul>
-  </body>
-</html>
-
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Home</title>
-    <meta charset="utf-8" />
     <style>
+      /* Set the height of the map */
       #map {
-        height: 100%;
-      }
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
+        height: 400px;
       }
     </style>
   </head>
@@ -44,37 +14,28 @@
     <div id="map"></div>
     <script>
       function initMap() {
-        // Create the map centered on Dublin, Ireland
+        // Create a new map centered on Dublin
         var map = new google.maps.Map(document.getElementById("map"), {
-          center: { lat: 53.3498053, lng: -6.2603097 },
+          center: { lat: 53.3498, lng: -6.2603 },
           zoom: 13,
         });
 
-        // Retrieve the data from the Flask app
-        var data = JSON.parse("{{ data | tojson | safe }}");
+        // Define the markers array
+        var markers = [];
 
-        // Add markers to the map for each station
-        for (var i = 0; i < data.length; i++) {
-          var marker = new google.maps.Marker({
-            position: { lat: data[i][3], lng: data[i][4] },
-            map: map,
-            title: data[i][1],
-          });
-        }
-
-        // Add markers for each location
-        //{% for row in data %}
-        //var location = { lat: {{ row[3] }}, lng: {{ row[4] }} };
-        //var marker = new google.maps.Marker({
-        //  position: location,
-        //  map: map,
-        //  title: "{{ row[1] }}",
-        //});
-        //{% endfor %}
+        // Loop through the data passed from Flask and add a marker for each location
+        {% for row in data %}
+        var marker = new google.maps.Marker({
+          position: { lat: {{ row[2] }}, lng: {{ row[3] }} },
+          map: map,
+          title: "{{ row[1] }}"
+        });
+        markers.push(marker);
+        {% endfor %}
       }
     </script>
     <script
-      src="https://www.google.com/maps/embed/v1/place?key=&q=Dublin,Ireland"
+      src="https://maps.googleapis.com/maps/api/js?key=YOUR-KEY-HERE&callback=initMap"
       async
       defer
     ></script>
