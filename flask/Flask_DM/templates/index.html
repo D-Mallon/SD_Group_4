@@ -22,20 +22,32 @@
 
         // Define the markers array
         var markers = [];
-
+        const infoWindow = new google.maps.InfoWindow();
         // Loop through the data passed from Flask and add a marker for each location
         {% for row in data %}
-        var marker = new google.maps.Marker({
+          marker = new google.maps.Marker({
           position: { lat: {{ row[2] }}, lng: {{ row[3] }} },
           map: map,
           title: "{{ row[1] }}"
         });
+
+        
         markers.push(marker);
         {% endfor %}
+
+        markers.forEach(marker => {
+        marker.addListener("click", ({ domEvent, latLng }) => {
+        const { target } = domEvent;
+
+        infoWindow.close();
+        infoWindow.setContent(marker.title);
+        infoWindow.open(marker.map, marker);
+    });
+        });
       }
     </script>
     <script
-      src="https://maps.googleapis.com/maps/api/js?key=YOUR-KEY-HERE&callback=initMap"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1kdqSjfK8r-VppX7Kw2TlOiyVHSCnhLs&callback=initMap"
       async
       defer
     ></script>
