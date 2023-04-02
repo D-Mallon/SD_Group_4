@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Home</title>
+    <meta charset="utf-8" />
+    <style>
+      /* Set the height of the map */
+      #map {
+        height: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      function initMap() {
+        // Create a new map centered on Dublin
+        var map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 53.3498, lng: -6.2603 },
+          zoom: 13,
+        });
+
+        // Define the markers array
+        var markers = [];
+        console.log(data);
+
+        // Loop through the data passed from Flask and add a marker for each location
+        {% for row in data %}
+        var marker = new google.maps.Marker({
+          position: { lat: {{ row[2] }}, lng: {{ row[3] }} },
+          map: map,
+          title: "{{ row[1] }}"
+        });
+        markers.push(marker);
+        {% endfor %}
+      }
+    </script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1kdqSjfK8r-VppX7Kw2TlOiyVHSCnhLs&callback=initMap"
+      async
+      defer
+    ></script>
+  </body>
+</html>
