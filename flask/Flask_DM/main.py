@@ -7,28 +7,54 @@ app = Flask(__name__)
 
 # see if this will cause issues. We are calling one database for static and another for the dynamic. A third will be required for the weather. Should these all be moved into the one db?
 
-def get_dynamic_data(station_id):
+def get_dynamic_data():
     mydb_dynamic = pymysql.connect(
         host="",
         user="",
         password="",
-        database="DBikeDynamicV2"
+        database=""
     )
 
-    mycursor = mydb_dynamic.cursor()
-    mycursor.execute(f"SELECT * FROM Dynamic WHERE ID = {station_id} ORDER BY DateTime DESC LIMIT 1")
-    data = mycursor.fetchone()
+    mycursor = mydb_dynamic.cursor(DictCursor)
+    mycursor.execute("""
+        SELECT *
+        FROM Dynamic
+        WHERE (ID, DateTime) IN (
+            SELECT ID, MAX(DateTime)
+            FROM Dynamic
+            GROUP BY ID
+        )
+    """)
+    data = mycursor.fetchall()
     mycursor.close()
     mydb_dynamic.close()
 
-    return data
+    return {row['ID']: row for row in data}
+
+def get_bike_data():
+    static_rows = get_static_data()
+    dynamic_data = get_dynamic_data()
+    bike_data = []
+
+    for row in static_rows:
+        station_dynamic_data = dynamic_data[row[0]]
+        bike_data.append({
+            'number': row[0],
+            'name': row[1],
+            'latitude': float(row[2]),
+            'longitude': float(row[3]),
+            'available_bikes': station_dynamic_data['AvailableBike'],
+            'capacity': station_dynamic_data['Capacity']
+        })
+
+    return bike_data
 
 def get_static_data():
     mydb_static = pymysql.connect(
         host="",
         user="",
         password="",
-        database="DBikeStatic"
+        database=""
     )
 
     mycursor = mydb_static.cursor()
@@ -38,23 +64,6 @@ def get_static_data():
     mydb_static.close()
 
     return rows
-
-def get_bike_data():
-    static_rows = get_static_data()
-    bike_data = []
-
-    for row in static_rows:
-        dynamic_data = get_dynamic_data(row[0])
-        bike_data.append({
-            'number': row[0],
-            'name': row[1],
-            'latitude': float(row[2]),
-            'longitude': float(row[3]),
-            'available_bikes': dynamic_data[1],
-            'capacity': dynamic_data[2]
-        })
-
-    return bike_data
 
 
 
