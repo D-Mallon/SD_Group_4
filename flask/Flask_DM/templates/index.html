@@ -1,34 +1,41 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dublin Bikes Stations</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-      function loadMapScript() {
-        var script = document.createElement('script');
-        script.src = 'https://maps.googleapis.com/maps/api/js?key=INSERTKEYHERE&callback=initMap';
-        script.async = true;
-        script.defer = true;
-        document.body.appendChild(script);
-      }
 
-      window.onload = loadMapScript;
-</script>
-    <style>
-        #map {
-            height: 400px;
-            width: 100%;
-        }
-    </style>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <title>Dublin Bikes</title>
 </head>
 <body>
-    <h1>Dublin Bikes Stations</h1>
-    <div id="map"></div>
-    <script>
-        const bikeData = {{ bike_data|tojson }};
-    </script>
-<script src="{{ url_for('static', filename='main.js') }}"></script>
+<div id="map" style="height: 500px; width: 100%;"></div>
+
+<div id="chart-container" style="display:none;">
+    <canvas id="todayChart"></canvas>
+    <canvas id="yesterdayChart"></canvas>
+    <canvas id="dayBeforeYesterdayChart"></canvas>
+</div>
+
+    <!-- Map and API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=INSERTAPIKEY&callback=fetchData" async defer></script>
+    <script src="/static/main.js"></script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"
+        integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/"
+        crossorigin="anonymous"></script>
+
 </body>
+
 </html>
