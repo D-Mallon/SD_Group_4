@@ -103,8 +103,12 @@ def station_data(station_id):
 
         data = mycursor.fetchall()
 
-        labels = [x["Hour"] for x in data]
+        labels = [f"{x['Hour']:02d}:00" for x in data]
         values = [x["AverageAvailableBike"] for x in data]
+
+        # trialling new time format. Commented out version shows times in 1,8,14,20 format instead of 14:00 for example. Can return to this point when we're dressing up the site.
+        # labels = [x["Hour"] for x in data]
+        # values = [x["AverageAvailableBike"] for x in data]
 
         return {"labels": labels, "data": values}
 
@@ -129,5 +133,53 @@ def station_data(station_id):
         "dayBeforeYesterday": day_before_yesterday_data,
     })
 
+
+@app.route('/average_station_data/<int:station_number>', methods=['GET'])
+def average_station_data(station_number):
+    # Connect to the dynamic database
+    mydb = pymysql.connect(
+        host="",
+        user="",
+        password="",
+        database="DBikeDynamicV2"
+    )
+
+    cur = mydb.cursor(DictCursor)
+
+    # Get the current day of the week (0 = Monday, 1 = Tuesday, etc.)
+    current_day = datetime.today().weekday()
+
+    query = '''
+    SELECT HOUR(DateTime) AS hour, AVG(AvailableBike) as avg_available_bikes
+    FROM Dynamic
+    WHERE ID = %s AND WEEKDAY(DateTime) = %s
+    GROUP BY hour
+    ORDER BY hour
+    '''
+
+    cur.execute(query, (station_number, current_day))
+    results = cur.fetchall()
+
+    cur.close()
+    mydb.close()
+
+    # Convert the results to the format expected by the chart
+    labels = []
+    data = []
+    for row in results:
+        hour = row["hour"]
+        avg_available_bikes = row["avg_available_bikes"]
+        labels.append(f"{int(hour)}:00")
+        data.append(avg_available_bikes)
+
+    return jsonify({"labels": labels, "data": data})
+
+
+
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
+

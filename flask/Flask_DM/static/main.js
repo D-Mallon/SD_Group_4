@@ -2,6 +2,7 @@ let bikeData;
 let todayChart;
 let yesterdayChart;
 let dayBeforeYesterdayChart;
+let averageTodayChart;
 
 
 //initializes a Google Map and creates markers for each bike station using the data obtained from the server
@@ -37,9 +38,14 @@ function initMap() {
             document.getElementById('chart-container').style.display = 'none';
         }
 
+        function closeAverageChart() {
+            document.getElementById('average-chart-container').style.display = 'none';
+        }
+
         // Adding the event listener for when the info window is closed, which hides the charts
         infoWindow.addListener("closeclick", () => {
             closeCharts();
+            closeAverageChart();
         });
 
         marker.addListener("click", () => {
@@ -56,8 +62,10 @@ function initMap() {
                 activeInfoWindow = infoWindow;
                 activeMarker = marker;
 
-                // Add this line to call onMarkerClick when a marker is clicked
+                // This calls onMarkerClick when a marker is clicked
                 onMarkerClick(station.number);
+                 // Shows the new chart when a marker is clicked
+                document.getElementById('average-chart-container').style.display = 'block';
             }
         });
     });
@@ -74,7 +82,6 @@ async function fetchData() {
     }
 }
 
-fetchData();
 
 async function onMarkerClick(stationNumber) {
     try {
@@ -97,40 +104,64 @@ async function onMarkerClick(stationNumber) {
         dayBeforeYesterdayChart.data.labels = data.dayBeforeYesterday.labels;
         dayBeforeYesterdayChart.data.datasets[0].data = data.dayBeforeYesterday.data;
         dayBeforeYesterdayChart.update();
+
+        // Update the average hourly availability chart
+        const avgResponse = await fetch(`/average_station_data/${stationNumber}`);
+        const avgData = await avgResponse.json();
+        averageTodayChart.data.labels = avgData.labels;
+        averageTodayChart.data.datasets[0].data = avgData.data;
+        averageTodayChart.update();
     } catch (error) {
         console.error("Error fetching station data:", error);
     }
 }
 
+function getDayName(offset) {
+    const today = new Date();
+    const targetDate = new Date(today.setDate(today.getDate() - offset));
+    const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+    return weekdays[targetDate.getDay()];
+}
 
 function initCharts() {
-    const chartOptions = {
-        type: 'bar',
-        data: {
-            labels: [],
-            datasets: [
-                {
-                    label: 'Available Bikes',
-                    data: [],
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1,
+    const chartOptions = (title) => {
+        return {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Available Bikes',
+                        data: [],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                    },
+                ],
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: title,
+                    },
                 },
-            ],
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
                 },
             },
-        },
+        };
     };
 
-    todayChart = new Chart(document.getElementById('todayChart'), chartOptions);
-    yesterdayChart = new Chart(document.getElementById('yesterdayChart'), chartOptions);
-    dayBeforeYesterdayChart = new Chart(document.getElementById('dayBeforeYesterdayChart'), chartOptions);
+    todayChart = new Chart(document.getElementById('todayChart'), chartOptions("Today's average hourly availability"));
+    yesterdayChart = new Chart(document.getElementById('yesterdayChart'), chartOptions(`${getDayName(1)}'s average hourly availability`));
+    dayBeforeYesterdayChart = new Chart(document.getElementById('dayBeforeYesterdayChart'), chartOptions(`${getDayName(2)}'s average hourly availability`));
+    averageTodayChart = new Chart(document.getElementById('averageTodayChart'), chartOptions("Today's average hourly availability (all-time)"));
 }
+
 
 fetchData().then(() => {
     initMap();
