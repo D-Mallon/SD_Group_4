@@ -3,7 +3,8 @@ let todayChart;
 let yesterdayChart;
 let dayBeforeYesterdayChart;
 let averageTodayChart;
-
+let userloc;
+let destloc;
 
 //initializes a Google Map and creates markers for each bike station using the data obtained from the server
 function initMap() {

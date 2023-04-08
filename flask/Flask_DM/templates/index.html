@@ -14,7 +14,8 @@
 </head>
 <body>
 <div id="map" style="height: 500px; width: 100%;"></div>
-
+<input id="autocompleteStart" placeholder="Enter a place" type="text" />   
+<input id="autocompleteEnd" placeholder="Enter a place" type="text" />
 <div id="chart-container" style="display:none;">
     <canvas id="todayChart"></canvas>
     <canvas id="yesterdayChart"></canvas>
@@ -27,7 +28,7 @@
 
 
     <!-- Map and API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=INSERTKEYHERE&callback=fetchData" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1kdqSjfK8r-VppX7Kw2TlOiyVHSCnhLs&libraries=places&callback=fetchData" async defer></script>
     <script src="/static/main.js"></script>
 
     <!-- Optional JavaScript -->
