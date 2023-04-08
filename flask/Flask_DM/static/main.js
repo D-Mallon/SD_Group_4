@@ -5,17 +5,19 @@ let dayBeforeYesterdayChart;
 let averageTodayChart;
 let userloc;
 let destloc;
-
+let directionsService;
+let directionsRenderer;
+let map;
 //initializes a Google Map and creates markers for each bike station using the data obtained from the server
 function initMap() {
     const dublin = { lat: 53.349805, lng: -6.26031 };
-    const map = new google.maps.Map(document.getElementById("map"), {
+    map = new google.maps.Map(document.getElementById("map"), {
         zoom: 14,
         center: dublin,
     });
 
     directionsService = new google.maps.DirectionsService,
-    directionsDisplay = new google.maps.DirectionsRenderer({
+    directionsRenderer = new google.maps.DirectionsRenderer({
             map: map
                     }),
     
@@ -258,3 +260,60 @@ function findClosestStationEnd(){
 }
 
 
+function showRoute() {
+    var request1 = {
+      origin: new google.maps.LatLng(userloc.geometry.location.lat(),userloc.geometry.location.lng()),
+      destination: findClosestStationStart(),
+      travelMode: 'WALKING'
+    };
+  
+    var request2 = {
+      origin: findClosestStationStart(),
+      destination: findClosestStationEnd(),
+      travelMode: 'BICYCLING'
+    };
+  
+    var request3 = {
+      origin: findClosestStationEnd(),
+      destination: new google.maps.LatLng(destloc.geometry.location.lat(),destloc.geometry.location.lng()),
+      travelMode: 'WALKING'
+    };
+  
+    directionsService.route(request1, function(result1, status1) {
+      if (status1 == 'OK') {
+        directionsService.route(request2, function(result2, status2) {
+          if (status2 == 'OK') {
+            directionsService.route(request3, function(result3, status3) {
+              if (status3 == 'OK') {
+                // Combine the three legs into a single result
+                var combinedResult = result1;
+                combinedResult.routes[0].legs.push.apply(combinedResult.routes[0].legs, result2.routes[0].legs);
+                combinedResult.routes[0].legs.push.apply(combinedResult.routes[0].legs, result3.routes[0].legs);
+  
+                // Display the combined result on the map
+                directionsRenderer.setDirections(combinedResult);
+                directionsRenderer.setMap(map);
+              }
+            });
+          }
+        });
+      }
+    });
+  
+    
+  }
+
+
+function Test(){
+    var request = {
+        origin: findClosestStationStart(),
+        destination: findClosestStationEnd(),
+        travelMode: 'WALKING'
+      };
+      directionsService.route(request, function(result, status) {
+        if (status == 'OK') {
+            directionsRenderer.setDirections(result);
+                directionsRenderer.setMap(map);
+        }
+    })
+};
