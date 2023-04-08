@@ -14,6 +14,12 @@ function initMap() {
         center: dublin,
     });
 
+    directionsService = new google.maps.DirectionsService,
+    directionsDisplay = new google.maps.DirectionsRenderer({
+            map: map
+                    }),
+    
+
     autocompleteStart = new google.maps.places.Autocomplete(document.getElementById('autocompleteStart'),
     {
         types:['establishment'],
@@ -197,3 +203,58 @@ fetchData().then(() => {
     initMap();
     initCharts();
 });
+
+
+function findClosestStationStart(){
+    
+    stations = {}
+    bikeData.forEach(station => {
+        if (station.available_bikes != 0){
+        stations[station.name] = new google.maps.LatLng(station.latitude, station.longitude)};
+    });
+
+
+    var distances = [];
+
+    for (var stationName in stations) {
+        var location = stations[stationName];
+        var place = new google.maps.LatLng(userloc.geometry.location.lat(),userloc.geometry.location.lng())
+        var distance = google.maps.geometry.spherical.computeDistanceBetween(place, location);
+        distances.push({Station:stationName, distance:distance}) 
+    }
+
+    
+
+    distances = distances.sort((a, b) => a.distance - b.distance)
+    
+    result = new google.maps.LatLng(stations[distances[0].Station].lat(), stations[distances[0].Station].lng())
+    return result
+}
+
+function findClosestStationEnd(){
+    
+    stations = {}
+    bikeData.forEach(station => {
+        if (station.available_bikes != 0){
+        stations[station.name] = new google.maps.LatLng(station.latitude, station.longitude)};
+    });
+
+
+    var distances = [];
+
+    for (var stationName in stations) {
+        var location = stations[stationName];
+        var place = new google.maps.LatLng(destloc.geometry.location.lat(),destloc.geometry.location.lng())
+        var distance = google.maps.geometry.spherical.computeDistanceBetween(place, location);
+        distances.push({Station:stationName, distance:distance}) 
+    }
+
+    
+
+    distances = distances.sort((a, b) => a.distance - b.distance)
+
+    result = new google.maps.LatLng(stations[distances[0].Station].lat(), stations[distances[0].Station].lng())
+    return result
+}
+
+
