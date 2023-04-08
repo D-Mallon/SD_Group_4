@@ -13,6 +13,23 @@ function initMap() {
         center: dublin,
     });
 
+    autocompleteStart = new google.maps.places.Autocomplete(document.getElementById('autocompleteStart'),
+    {
+        types:['establishment'],
+        componentRestrictions:{'country':['IE']},
+        fields:['place_id','geometry','name']
+    });
+
+    autocompleteEnd = new google.maps.places.Autocomplete(document.getElementById('autocompleteEnd'),
+    {
+        types:['establishment'],
+        componentRestrictions:{'country':['IE']},
+        fields:['place_id','geometry','name']
+    });
+
+    autocompleteStart.addListener ('place_changed', onPlaceChangedStart);
+    autocompleteEnd.addListener ('place_changed', onPlaceChangedEnd);
+
     let activeInfoWindow; // Keep track of the currently open info window
     let activeMarker; // Keep track of the currently active marker
 
@@ -69,6 +86,18 @@ function initMap() {
             }
         });
     });
+}
+
+
+function onPlaceChangedStart(){
+    userloc = autocompleteStart.getPlace();
+    
+}
+
+function onPlaceChangedEnd(){
+    destloc = autocompleteEnd.getPlace();
+
+    
 }
 
 
