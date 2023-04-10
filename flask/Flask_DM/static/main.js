@@ -3,17 +3,49 @@ let todayChart;
 let yesterdayChart;
 let dayBeforeYesterdayChart;
 let averageTodayChart;
+<<<<<<< HEAD
 let shouldCloseCharts = false; //including this flag to ensure charts close as during testing, quickly moving between windows and closing windows wasn't acknowledged.
 
 
 
+=======
+let userloc;
+let destloc;
+let directionsService;
+let directionsRenderer;
+let map;
+>>>>>>> cdda415b1fecba63c7d065837e1ec45582694ddc
 //initializes a Google Map and creates markers for each bike station using the data obtained from the server
 function initMap() {
     const dublin = { lat: 53.349805, lng: -6.26031 };
-    const map = new google.maps.Map(document.getElementById("map"), {
+    map = new google.maps.Map(document.getElementById("map"), {
         zoom: 14,
         center: dublin,
     });
+
+    directionsService = new google.maps.DirectionsService,
+    directionsRenderer = new google.maps.DirectionsRenderer({
+            map: map
+                    }),
+   
+    
+
+    autocompleteStart = new google.maps.places.Autocomplete(document.getElementById('autocompleteStart'),
+    {
+        types:['establishment'],
+        componentRestrictions:{'country':['IE']},
+        fields:['place_id','geometry','name']
+    });
+
+    autocompleteEnd = new google.maps.places.Autocomplete(document.getElementById('autocompleteEnd'),
+    {
+        types:['establishment'],
+        componentRestrictions:{'country':['IE']},
+        fields:['place_id','geometry','name']
+    });
+
+    autocompleteStart.addListener ('place_changed', onPlaceChangedStart);
+    autocompleteEnd.addListener ('place_changed', onPlaceChangedEnd);
 
     let activeInfoWindow; // Keep track of the currently open info window
     let activeMarker; // Keep track of the currently active marker
@@ -60,7 +92,10 @@ function initMap() {
 
         // Adding the event listener for when the info window is closed, which hides the charts
         infoWindow.addListener("closeclick", () => {
+<<<<<<< HEAD
             shouldCloseCharts = true; // testing situation where multiple info windows selected quickly and last close window actioned
+=======
+>>>>>>> cdda415b1fecba63c7d065837e1ec45582694ddc
             closeCharts();
             closeAverageChart();
         });
@@ -89,6 +124,21 @@ function initMap() {
 }
 
 
+<<<<<<< HEAD
+=======
+function onPlaceChangedStart(){
+    userloc = autocompleteStart.getPlace();
+    
+}
+
+function onPlaceChangedEnd(){
+    destloc = autocompleteEnd.getPlace();
+
+    
+}
+
+
+>>>>>>> cdda415b1fecba63c7d065837e1ec45582694ddc
 async function fetchData() {
     try {
         const response = await fetch("/bike_stations");
@@ -101,17 +151,23 @@ async function fetchData() {
 
 
 async function onMarkerClick(stationNumber) {
+<<<<<<< HEAD
     shouldCloseCharts = false;
+=======
+>>>>>>> cdda415b1fecba63c7d065837e1ec45582694ddc
     try {
         const response = await fetch(`/station_data/${stationNumber}`);
         const data = await response.json();
 
+<<<<<<< HEAD
         if (shouldCloseCharts) {
             closeCharts();
             closeAverageChart();
             return;
         }
 
+=======
+>>>>>>> cdda415b1fecba63c7d065837e1ec45582694ddc
         document.getElementById('chart-container').style.display = 'block';
 
         // Update today chart
@@ -129,6 +185,7 @@ async function onMarkerClick(stationNumber) {
         dayBeforeYesterdayChart.data.datasets[0].data = data.dayBeforeYesterday.data;
         dayBeforeYesterdayChart.update();
 
+<<<<<<< HEAD
         // Fetch the average station data
         const avgResponse = await fetch(`/average_station_data/${stationNumber}`);
         const avgData = await avgResponse.json();
@@ -144,12 +201,23 @@ async function onMarkerClick(stationNumber) {
         averageTodayChart.data.datasets[0].data = avgData.data;
         averageTodayChart.update();
 
+=======
+        // Update the average hourly availability chart
+        const avgResponse = await fetch(`/average_station_data/${stationNumber}`);
+        const avgData = await avgResponse.json();
+        averageTodayChart.data.labels = avgData.labels;
+        averageTodayChart.data.datasets[0].data = avgData.data;
+        averageTodayChart.update();
+>>>>>>> cdda415b1fecba63c7d065837e1ec45582694ddc
     } catch (error) {
         console.error("Error fetching station data:", error);
     }
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> cdda415b1fecba63c7d065837e1ec45582694ddc
 function getDayName(offset) {
     const today = new Date();
     const targetDate = new Date(today.setDate(today.getDate() - offset));
@@ -200,4 +268,105 @@ function initCharts() {
 fetchData().then(() => {
     initMap();
     initCharts();
+<<<<<<< HEAD
 });
+=======
+});
+
+
+function findClosestStationStart(){
+    
+    stations = {}
+    bikeData.forEach(station => {
+        if (station.available_bikes != 0){
+        stations[station.name] = new google.maps.LatLng(station.latitude, station.longitude)};
+    });
+
+
+    var distances = [];
+
+    for (var stationName in stations) {
+        var location = stations[stationName];
+        var place = new google.maps.LatLng(userloc.geometry.location.lat(),userloc.geometry.location.lng())
+        var distance = google.maps.geometry.spherical.computeDistanceBetween(place, location);
+        distances.push({Station:stationName, distance:distance}) 
+    }
+
+    
+
+    distances = distances.sort((a, b) => a.distance - b.distance)
+    
+    result = new google.maps.LatLng(stations[distances[0].Station].lat(), stations[distances[0].Station].lng())
+    return result
+}
+
+function findClosestStationEnd(){
+    
+    stations = {}
+    bikeData.forEach(station => {
+        if (station.available_bikes != 0){
+        stations[station.name] = new google.maps.LatLng(station.latitude, station.longitude)};
+    });
+
+
+    var distances = [];
+
+    for (var stationName in stations) {
+        var location = stations[stationName];
+        var place = new google.maps.LatLng(destloc.geometry.location.lat(),destloc.geometry.location.lng())
+        var distance = google.maps.geometry.spherical.computeDistanceBetween(place, location);
+        distances.push({Station:stationName, distance:distance}) 
+    }
+
+    
+
+    distances = distances.sort((a, b) => a.distance - b.distance)
+
+    result = new google.maps.LatLng(stations[distances[0].Station].lat(), stations[distances[0].Station].lng())
+    return result
+}
+
+
+function showRoute() {
+    var request1 = {
+      origin: new google.maps.LatLng(userloc.geometry.location.lat(),userloc.geometry.location.lng()),
+      destination: findClosestStationStart(),
+      travelMode: 'WALKING'
+    };
+  
+    var request2 = {
+      origin: findClosestStationStart(),
+      destination: findClosestStationEnd(),
+      travelMode: 'BICYCLING'
+    };
+  
+    var request3 = {
+      origin: findClosestStationEnd(),
+      destination: new google.maps.LatLng(destloc.geometry.location.lat(),destloc.geometry.location.lng()),
+      travelMode: 'WALKING'
+    };
+  
+    directionsService.route(request1, function(result1, status1) {
+      if (status1 == 'OK') {
+        directionsService.route(request2, function(result2, status2) {
+          if (status2 == 'OK') {
+            directionsService.route(request3, function(result3, status3) {
+              if (status3 == 'OK') {
+                // Combine the three legs into a single result
+                var combinedResult = result1;
+                combinedResult.routes[0].legs.push.apply(combinedResult.routes[0].legs, result2.routes[0].legs);
+                combinedResult.routes[0].legs.push.apply(combinedResult.routes[0].legs, result3.routes[0].legs);
+  
+                // Display the combined result on the map
+                directionsRenderer.setDirections(combinedResult);
+                directionsRenderer.setMap(map);
+              }
+            });
+          }
+        });
+      }
+    });
+  
+    
+  }
+>>>>>>> cdda415b1fecba63c7d065837e1ec45582694ddc
