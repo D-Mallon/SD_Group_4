@@ -3,18 +3,12 @@ let todayChart;
 let yesterdayChart;
 let dayBeforeYesterdayChart;
 let averageTodayChart;
-<<<<<<< HEAD
-let shouldCloseCharts = false; //including this flag to ensure charts close as during testing, quickly moving between windows and closing windows wasn't acknowledged.
-
-
-
-=======
 let userloc;
 let destloc;
 let directionsService;
 let directionsRenderer;
 let map;
->>>>>>> cdda415b1fecba63c7d065837e1ec45582694ddc
+let shouldCloseCharts = false
 //initializes a Google Map and creates markers for each bike station using the data obtained from the server
 function initMap() {
     const dublin = { lat: 53.349805, lng: -6.26031 };
@@ -92,10 +86,7 @@ function initMap() {
 
         // Adding the event listener for when the info window is closed, which hides the charts
         infoWindow.addListener("closeclick", () => {
-<<<<<<< HEAD
             shouldCloseCharts = true; // testing situation where multiple info windows selected quickly and last close window actioned
-=======
->>>>>>> cdda415b1fecba63c7d065837e1ec45582694ddc
             closeCharts();
             closeAverageChart();
         });
@@ -105,6 +96,7 @@ function initMap() {
                 activeInfoWindow.close();
                 activeInfoWindow = null;
                 activeMarker = null;
+                closeCharts(); // Closes the charts when the info window from marker is closed
                 closeCharts(); // Closes the charts when the info window from marker is closed
             } else {
                 if (activeInfoWindow) {
@@ -118,14 +110,17 @@ function initMap() {
                 onMarkerClick(station.number);
                  // Shows the new chart when a marker is clicked
                 document.getElementById('average-chart-container').style.display = 'block';
+
+                // This calls onMarkerClick when a marker is clicked
+                onMarkerClick(station.number);
+                 // Shows the new chart when a marker is clicked
+                document.getElementById('average-chart-container').style.display = 'block';
             }
         });
     });
 }
 
 
-<<<<<<< HEAD
-=======
 function onPlaceChangedStart(){
     userloc = autocompleteStart.getPlace();
     
@@ -138,7 +133,6 @@ function onPlaceChangedEnd(){
 }
 
 
->>>>>>> cdda415b1fecba63c7d065837e1ec45582694ddc
 async function fetchData() {
     try {
         const response = await fetch("/bike_stations");
@@ -151,23 +145,10 @@ async function fetchData() {
 
 
 async function onMarkerClick(stationNumber) {
-<<<<<<< HEAD
-    shouldCloseCharts = false;
-=======
->>>>>>> cdda415b1fecba63c7d065837e1ec45582694ddc
     try {
         const response = await fetch(`/station_data/${stationNumber}`);
         const data = await response.json();
 
-<<<<<<< HEAD
-        if (shouldCloseCharts) {
-            closeCharts();
-            closeAverageChart();
-            return;
-        }
-
-=======
->>>>>>> cdda415b1fecba63c7d065837e1ec45582694ddc
         document.getElementById('chart-container').style.display = 'block';
 
         // Update today chart
@@ -185,39 +166,17 @@ async function onMarkerClick(stationNumber) {
         dayBeforeYesterdayChart.data.datasets[0].data = data.dayBeforeYesterday.data;
         dayBeforeYesterdayChart.update();
 
-<<<<<<< HEAD
-        // Fetch the average station data
-        const avgResponse = await fetch(`/average_station_data/${stationNumber}`);
-        const avgData = await avgResponse.json();
-
-        if (shouldCloseCharts) {
-            closeCharts();
-            closeAverageChart();
-            return;
-        }
-
-        // Update the average hourly availability chart
-        averageTodayChart.data.labels = avgData.labels;
-        averageTodayChart.data.datasets[0].data = avgData.data;
-        averageTodayChart.update();
-
-=======
         // Update the average hourly availability chart
         const avgResponse = await fetch(`/average_station_data/${stationNumber}`);
         const avgData = await avgResponse.json();
         averageTodayChart.data.labels = avgData.labels;
         averageTodayChart.data.datasets[0].data = avgData.data;
         averageTodayChart.update();
->>>>>>> cdda415b1fecba63c7d065837e1ec45582694ddc
     } catch (error) {
         console.error("Error fetching station data:", error);
     }
 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> cdda415b1fecba63c7d065837e1ec45582694ddc
 function getDayName(offset) {
     const today = new Date();
     const targetDate = new Date(today.setDate(today.getDate() - offset));
@@ -268,9 +227,6 @@ function initCharts() {
 fetchData().then(() => {
     initMap();
     initCharts();
-<<<<<<< HEAD
-});
-=======
 });
 
 
@@ -369,4 +325,8 @@ function showRoute() {
   
     
   }
->>>>>>> cdda415b1fecba63c7d065837e1ec45582694ddc
+
+fetchData().then(() => {
+    initMap();
+    initCharts();
+});
