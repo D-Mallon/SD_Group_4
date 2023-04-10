@@ -9,6 +9,7 @@ let directionsService;
 let directionsRenderer;
 let map;
 let shouldCloseCharts = false
+
 //initializes a Google Map and creates markers for each bike station using the data obtained from the server
 function initMap() {
     const dublin = { lat: 53.349805, lng: -6.26031 };

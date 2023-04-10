@@ -6,11 +6,6 @@ import json
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
-from datetime import datetime, timedelta
-import json
-import logging
-
-logging.basicConfig(level=logging.DEBUG)
 
 
 app = Flask(__name__)
@@ -34,49 +29,37 @@ def get_dynamic_data():
         )
     """)
 
-    dynamic_data = mycursor.fetchall()
+
 
     dynamic_data = mycursor.fetchall()
     mycursor.close()
     mydb_dynamic.close()
-
-    return dynamic_data
     return dynamic_data
 
-@app.route('/')
-def main_page():
 @app.route('/')
 def main_page():
     dynamic_data = get_dynamic_data()
 
     return render_template('index.html', dynamic_data=dynamic_data)
-    return render_template('index.html', dynamic_data=dynamic_data)
+
 
 # retrieves the bike station data from the DBikeStatic and DBikeDynamicV2 databases, merges the data into a list of dictionaries, and returns the data as a JSON response.
 @app.route("/bike_stations")
 def bike_stations():
     # Fetch the dynamic data
     dynamic_data = get_dynamic_data()
-# retrieves the bike station data from the DBikeStatic and DBikeDynamicV2 databases, merges the data into a list of dictionaries, and returns the data as a JSON response.
-@app.route("/bike_stations")
-def bike_stations():
-    # Fetch the dynamic data
-    dynamic_data = get_dynamic_data()
 
-    # Fetch the static data
+
     # Fetch the static data
     mydb_static = pymysql.connect(
-        host="",
-        user="",
-        password="",
+        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
+        user="admin",
+        password="COMP30830Group4!",
         database="DBikeStatic"
     )
 
     mycursor = mydb_static.cursor(DictCursor)
-    mycursor = mydb_static.cursor(DictCursor)
     mycursor.execute("SELECT * FROM Stations")
-
-    static_data = mycursor.fetchall()
 
     static_data = mycursor.fetchall()
     mycursor.close()
