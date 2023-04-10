@@ -20,6 +20,7 @@ function initMap() {
     directionsRenderer = new google.maps.DirectionsRenderer({
             map: map
                     }),
+   
     
 
     autocompleteStart = new google.maps.places.Autocomplete(document.getElementById('autocompleteStart'),
@@ -302,18 +303,3 @@ function showRoute() {
   
     
   }
-
-
-function Test(){
-    var request = {
-        origin: findClosestStationStart(),
-        destination: findClosestStationEnd(),
-        travelMode: 'WALKING'
-      };
-      directionsService.route(request, function(result, status) {
-        if (status == 'OK') {
-            directionsRenderer.setDirections(result);
-                directionsRenderer.setMap(map);
-        }
-    })
-};
