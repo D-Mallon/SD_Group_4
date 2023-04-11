@@ -60,7 +60,7 @@ function initMap() {
         const marker = new google.maps.Marker({
             position: { lat: station.latitude, lng: station.longitude },
             map: map,
-            draggable: true,
+            draggable: false,
             animation: google.maps.Animation.DROP,
             title: station.name,
             icon: {
@@ -317,6 +317,7 @@ function showRoute() {
                 // Display the combined result on the map
                 directionsRenderer.setDirections(combinedResult);
                 directionsRenderer.setMap(map);
+                console.log(combinedResult.routes[0].legs[0].duration.text)
               }
             });
           }
@@ -331,3 +332,14 @@ fetchData().then(() => {
     initMap();
     initCharts();
 });
+
+function handleDate(){
+    var date = document.getElementById('toggle-date')
+    if(date.style.display == 'block'){
+        date.style.display = 'none'
+    }
+    else{
+        date.style.display='block'
+    }
+    
+}
