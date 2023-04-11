@@ -134,12 +134,45 @@ function onPlaceChangedEnd(){
     
 }
 
+function initWeather(){
+    var weatherImage = document.getElementById('weather')
+    if(weatherData[0]['Main'] == 'Rain'){
+    weatherImage.src = 'https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/Rain.png?raw=true'
+    }
+
+    else if(weatherData[0]['Main'] == 'Clouds'){
+        weatherImage.src = ''
+    }
+
+    else if(weatherData[0]['Main'] == 'Drizzle'){
+        weatherImage.src = 'https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/Rain.png?raw=true'
+    }
+
+    else if(weatherData[0]['Main'] == 'Clear'){
+        weatherImage.src = ''
+    }
+
+    else if(weatherData[0]['Main'] == 'Mist'){
+        weatherImage.src = ''
+    }
+
+    else if(weatherData[0]['Main'] == 'Fog'){
+        weatherImage.src = ''
+    }
+
+}
 
 async function fetchData() {
     try {
         const response = await fetch("/bike_stations");
         bikeData = await response.json();
+
+        const weather = await fetch("/weather_data")
+        weatherData = await weather.json();
+        console.log(weatherData)
         initMap();
+        initWeather();
+
     } catch (error) {
         console.error("Error fetching bike data:", error);
     }
@@ -226,9 +259,11 @@ function initCharts() {
 }
 
 
+
 fetchData().then(() => {
     initMap();
     initCharts();
+    initWeather();
 });
 
 

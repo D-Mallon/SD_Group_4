@@ -53,15 +53,20 @@ def getWeatherData():
     weatherData = mycursor.fetchall()
     mycursor.close()
     mydb_weather.close()
-    return weatherData[0]['Main']
+    return weatherData
 
 @app.route('/')
 def main_page():
+    weatherData = getWeatherData()
     dynamic_data = get_dynamic_data()
-    weather_data = getWeatherData()
     return render_template('index.html', dynamic_data=dynamic_data)
 
 
+
+@app.route("/weather_data")
+def weatherData():
+    weatherData = getWeatherData()
+    return jsonify(weatherData)
 # retrieves the bike station data from the DBikeStatic and DBikeDynamicV2 databases, merges the data into a list of dictionaries, and returns the data as a JSON response.
 @app.route("/bike_stations")
 def bike_stations():
