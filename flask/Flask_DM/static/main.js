@@ -141,7 +141,7 @@ function initWeather(){
     }
 
     else if(weatherData[0]['Main'] == 'Clouds'){
-        weatherImage.src = ''
+        weatherImage.src = 'https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/Cloudy.png?raw=true'
     }
 
     else if(weatherData[0]['Main'] == 'Drizzle'){
@@ -149,15 +149,15 @@ function initWeather(){
     }
 
     else if(weatherData[0]['Main'] == 'Clear'){
-        weatherImage.src = ''
+        weatherImage.src = 'https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/clear.png?raw=true'
     }
 
     else if(weatherData[0]['Main'] == 'Mist'){
-        weatherImage.src = ''
+        weatherImage.src = 'https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/foggy.jpg?raw=true'
     }
 
     else if(weatherData[0]['Main'] == 'Fog'){
-        weatherImage.src = ''
+        weatherImage.src = 'https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/foggy.jpg?raw=true'
     }
 
 }
