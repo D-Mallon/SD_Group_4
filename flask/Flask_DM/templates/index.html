@@ -149,6 +149,12 @@ margin-top: 135px;
     display: none;
     margin-left: 30px;
 }
+
+.weather-container{
+    padding-right: 20px;
+    float:right;
+}
+
 </style>
 
 
@@ -156,20 +162,22 @@ margin-top: 135px;
 <body>
 <div id="map" style="height: 500px; width: 100%;"></div>
 
-
-<div class="input-container">
-    <input id="autocompleteStart" placeholder="Enter a place" type="text" /><br>
-    <input id="autocompleteEnd" placeholder="Enter a place" type="text" />
-    <input type='button' value="Get Route" id='route' onclick="showRoute()"/>
-    <input type="date" id="toggle-date" name="date">
+<div class="info-container">
+    <div class="input-container">
+        <input id="autocompleteStart" placeholder="Enter a place" type="text" /><br>
+        <input id="autocompleteEnd" placeholder="Enter a place" type="text" />
+        <input type='button' value="Get Route" id='route' onclick="showRoute()"/>
+        <input type="date" id="toggle-date" name="date">
+    </div>
+    <div class="toggle-container">
+        <label id="labelText">Select Date</label>
+        <input type="checkbox" id="toggle-switch" name="toggle-switch" class="toggle-checkbox" onchange="handleDate()">
+        <label for="toggle-switch" class="toggle-label"></label>
+    </div>
+    <div class="weather-container">
+        <img id = 'weather' src="/Rain.png">
+    </div>
 </div>
-<div class="toggle-container">
-    <label id="labelText">Select Date</label>
-    <input type="checkbox" id="toggle-switch" name="toggle-switch" class="toggle-checkbox" onchange="handleDate()">
-    <label for="toggle-switch" class="toggle-label"></label>
-    
-  </div>
-
 
 <div id="chart-container" style="display:none;">
     <canvas id="todayChart"></canvas>
@@ -183,7 +191,7 @@ margin-top: 135px;
 
 
     <!-- Map and API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=APIKEYHERE&libraries=places,routes,geometry&callback=fetchData" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1kdqSjfK8r-VppX7Kw2TlOiyVHSCnhLs&libraries=places,routes,geometry&callback=fetchData" async defer></script>
     <script src="/static/main.js"></script>
 
     <!-- Optional JavaScript -->

@@ -12,9 +12,9 @@ app = Flask(__name__)
 
 def get_dynamic_data():
     mydb_dynamic = pymysql.connect(
-        host="",
-        user="",
-        password="",
+        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
+        user="admin",
+        password="COMP30830Group4!",
         database="DBikeDynamicV2"
     )
 
@@ -36,10 +36,29 @@ def get_dynamic_data():
     mydb_dynamic.close()
     return dynamic_data
 
+def getWeatherData():
+    mydb_weather = pymysql.connect(
+        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
+        user="admin",
+        password="COMP30830Group4!",
+        database="openweatherapi"
+    )
+
+
+    mycursor = mydb_weather.cursor(DictCursor)
+    mycursor.execute("""SELECT Main
+    FROM openweatherapi.Weather
+    ORDER BY DateTime DESC LIMIT 1;""")
+
+    weatherData = mycursor.fetchall()
+    mycursor.close()
+    mydb_weather.close()
+    return weatherData[0]['Main']
+
 @app.route('/')
 def main_page():
     dynamic_data = get_dynamic_data()
-
+    weather_data = getWeatherData()
     return render_template('index.html', dynamic_data=dynamic_data)
 
 
@@ -52,9 +71,9 @@ def bike_stations():
 
     # Fetch the static data
     mydb_static = pymysql.connect(
-        host="",
-        user="",
-        password="",
+        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
+        user="admin",
+        password="COMP30830Group4!",
         database="DBikeStatic"
     )
 
@@ -87,9 +106,9 @@ def bike_stations():
 def station_data(station_id):
     # Connect to the dynamic database
     mydb = pymysql.connect(
-        host="",
-        user="",
-        password="",
+        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
+        user="admin",
+        password="COMP30830Group4!",
         database="DBikeDynamicV2"
     )
 
@@ -141,9 +160,9 @@ def station_data(station_id):
 def average_station_data(station_number):
     # Connect to the dynamic database
     mydb = pymysql.connect(
-        host="",
-        user="",
-        password="",
+        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
+        user="admin",
+        password="COMP30830Group4!",
         database="DBikeDynamicV2"
     )
 

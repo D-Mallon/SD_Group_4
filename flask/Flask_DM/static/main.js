@@ -9,6 +9,7 @@ let directionsService;
 let directionsRenderer;
 let map;
 let shouldCloseCharts = false
+let future = false
 
 //initializes a Google Map and creates markers for each bike station using the data obtained from the server
 function initMap() {
@@ -232,12 +233,16 @@ fetchData().then(() => {
 
 
 function findClosestStationStart(){
-    
+    if(future == false){
     stations = {}
     bikeData.forEach(station => {
         if (station.available_bikes != 0){
         stations[station.name] = new google.maps.LatLng(station.latitude, station.longitude)};
     });
+}
+    else{
+        //Implement getting data from ML
+    }
 
 
     var distances = [];
@@ -258,13 +263,16 @@ function findClosestStationStart(){
 }
 
 function findClosestStationEnd(){
-    
+    if(future=false){
     stations = {}
     bikeData.forEach(station => {
         if (station.available_bikes != 0){
         stations[station.name] = new google.maps.LatLng(station.latitude, station.longitude)};
     });
-
+}
+    else{
+        //Implement getting data from ML
+    }
 
     var distances = [];
 
@@ -337,9 +345,10 @@ function handleDate(){
     var date = document.getElementById('toggle-date')
     if(date.style.display == 'block'){
         date.style.display = 'none'
+        future = false
     }
     else{
         date.style.display='block'
+        future = true
     }
-    
 }
