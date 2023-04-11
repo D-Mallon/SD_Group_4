@@ -12,9 +12,9 @@ app = Flask(__name__)
 
 def get_dynamic_data():
     mydb_dynamic = pymysql.connect(
-        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
-        user="admin",
-        password="COMP30830Group4!",
+        host="",
+        user="",
+        password="",
         database="DBikeDynamicV2"
     )
 
@@ -52,9 +52,9 @@ def bike_stations():
 
     # Fetch the static data
     mydb_static = pymysql.connect(
-        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
-        user="admin",
-        password="COMP30830Group4!",
+        host="",
+        user="",
+        password="",
         database="DBikeStatic"
     )
 
@@ -87,9 +87,9 @@ def bike_stations():
 def station_data(station_id):
     # Connect to the dynamic database
     mydb = pymysql.connect(
-        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
-        user="admin",
-        password="COMP30830Group4!",
+        host="",
+        user="",
+        password="",
         database="DBikeDynamicV2"
     )
 
@@ -141,9 +141,9 @@ def station_data(station_id):
 def average_station_data(station_number):
     # Connect to the dynamic database
     mydb = pymysql.connect(
-        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
-        user="admin",
-        password="COMP30830Group4!",
+        host="",
+        user="",
+        password="",
         database="DBikeDynamicV2"
     )
 
