@@ -4,6 +4,7 @@ from pymysql.cursors import DictCursor
 from datetime import datetime, timedelta
 import json
 import logging
+import machine_learning
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -12,9 +13,9 @@ app = Flask(__name__)
 
 def get_dynamic_data():
     mydb_dynamic = pymysql.connect(
-        host="",
-        user="",
-        password="",
+        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
+        user="admin",
+        password="COMP30830Group4!",
         database="DBikeDynamicV2"
     )
 
@@ -38,9 +39,9 @@ def get_dynamic_data():
 
 def getWeatherData():
     mydb_weather = pymysql.connect(
-        host="",
-        user="",
-        password="",
+        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
+        user="admin",
+        password="COMP30830Group4!",
         database="openweatherapi"
     )
 
@@ -67,6 +68,10 @@ def main_page():
 def weatherData():
     weatherData = getWeatherData()
     return jsonify(weatherData)
+
+
+
+
 # retrieves the bike station data from the DBikeStatic and DBikeDynamicV2 databases, merges the data into a list of dictionaries, and returns the data as a JSON response.
 @app.route("/bike_stations")
 def bike_stations():
@@ -76,9 +81,9 @@ def bike_stations():
 
     # Fetch the static data
     mydb_static = pymysql.connect(
-        host="",
-        user="",
-        password="",
+        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
+        user="admin",
+        password="COMP30830Group4!",
         database="DBikeStatic"
     )
 
@@ -111,9 +116,9 @@ def bike_stations():
 def station_data(station_id):
     # Connect to the dynamic database
     mydb = pymysql.connect(
-        host="",
-        user="",
-        password="",
+        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
+        user="admin",
+        password="COMP30830Group4!",
         database="DBikeDynamicV2"
     )
 
@@ -165,9 +170,9 @@ def station_data(station_id):
 def average_station_data(station_number):
     # Connect to the dynamic database
     mydb = pymysql.connect(
-        host="",
-        user="",
-        password="",
+        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
+        user="admin",
+        password="COMP30830Group4!",
         database="DBikeDynamicV2"
     )
 
@@ -200,10 +205,6 @@ def average_station_data(station_number):
         data.append(avg_available_bikes)
 
     return jsonify({"labels": labels, "data": data})
-
-
-
-
 
 
 
