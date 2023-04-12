@@ -111,6 +111,19 @@ def bike_stations():
     # Return the data as JSON
     return jsonify(bike_data)
 
+
+
+
+@app.route('/my_endpoint', methods=['POST'])
+def my_endpoint():
+    data = request.get_json()
+    print(data)
+    my_data = data['my_data']
+    # do something with my_data
+    
+    return my_data
+
+
 # retrieves data for the specified bike station from the DBikeDynamicV2 database and returns the data as a JSON response.
 @app.route('/station_data/<int:station_id>')
 def station_data(station_id):

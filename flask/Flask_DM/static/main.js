@@ -122,6 +122,75 @@ function initMap() {
     });
 }
 
+function futureClosestStationStart(){
+    stations = {}
+    bikeData.forEach(station => {
+        if (station.available_bikes != 0){
+        stations[station.number] = new google.maps.LatLng(station.latitude, station.longitude)};
+    });
+
+    var distances = [];
+
+    for (var stationNumber in stations) { 
+        var location = stations[stationNumber];
+        var place = new google.maps.LatLng(userloc.geometry.location.lat(),userloc.geometry.location.lng())
+        var distance = google.maps.geometry.spherical.computeDistanceBetween(place, location);
+        distances.push({Station:stationNumber, distance:distance})
+    }
+
+    distances = distances.sort((a, b) => a.distance - b.distance)
+    console.log(distances)
+    return(distances[0].Station)
+}
+
+function futureClosestStationEnd(){
+    stations = {}
+    bikeData.forEach(station => {
+        if (station.available_bikes != 0){
+        stations[station.number] = new google.maps.LatLng(station.latitude, station.longitude)};
+    });
+
+    var distances = [];
+
+    for (var stationNumber in stations) { 
+        var location = stations[stationNumber];
+        var place = new google.maps.LatLng(destloc.geometry.location.lat(),destloc.geometry.location.lng())
+        var distance = google.maps.geometry.spherical.computeDistanceBetween(place, location);
+        distances.push({Station:stationNumber, distance:distance})
+    }
+
+    distances = distances.sort((a, b) => a.distance - b.distance)
+    return(distances[0].Station)
+}
+   
+function routePlanning(){
+    if (future==false){
+        showRoute()
+    }
+    else{
+
+        let payload = {
+            my_data: document.getElementById("toggle-date").value,
+            id1: futureClosestStationStart(),
+            id2: futureClosestStationEnd()
+        };
+
+        //Implement ML
+        fetch('/my_endpoint', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => response.json())
+        //.then(data => console.log(data))
+    }
+    
+        
+    }
+
+
 
 function onPlaceChangedStart(){
     userloc = autocompleteStart.getPlace();
@@ -361,7 +430,6 @@ function showRoute() {
                 // Display the combined result on the map
                 directionsRenderer.setDirections(combinedResult);
                 directionsRenderer.setMap(map);
-                console.log(combinedResult.routes[0].legs[0].duration.text)
               }
             });
           }
