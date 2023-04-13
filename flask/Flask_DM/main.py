@@ -5,11 +5,15 @@ from datetime import datetime, timedelta
 import json
 import logging
 import machine_learning
+from datetime import datetime as dt
+
 
 logging.basicConfig(level=logging.DEBUG)
 
 
 app = Flask(__name__)
+
+
 
 def get_dynamic_data():
     mydb_dynamic = pymysql.connect(
@@ -111,17 +115,27 @@ def bike_stations():
     # Return the data as JSON
     return jsonify(bike_data)
 
-
+def getFutureData(dateOrdinal,stationData):
+    bikes = False
+    i = 0
+    while i < len(stationData):
+        if machine_learning.machine_learn(dateOrdinal,stationData['Station'])[0] > 1:
+            bikes = True
+        i+=1
+        if bikes == True:
+            return(stationData['Station'])
 
 
 @app.route('/my_endpoint', methods=['POST'])
 def my_endpoint():
     data = request.get_json()
-    print(data)
-    my_data = data['my_data']
-    # do something with my_data
+    date_string = data['date']
+    data.pop('date')
+    date = dt.strptime(date_string, '%Y-%m-%d').date()
+    ordinalDate = date.toordinal()
+    results = getFutureData(ordinalDate,data)
     
-    return my_data
+    return results
 
 
 # retrieves data for the specified bike station from the DBikeDynamicV2 database and returns the data as a JSON response.

@@ -122,6 +122,59 @@ function initMap() {
     });
 }
 
+function getStationByID(id){
+    stations = {}
+    bikeData.forEach(station => {
+        stations[station.number] = new google.maps.LatLng(station.latitude, station.longitude);
+    });
+    return stations[id] 
+}
+
+function futureRoute(){
+
+}
+
+function allStationDistancesStart(){
+    stations = {}
+    bikeData.forEach(station => {
+        stations[station.number] = new google.maps.LatLng(station.latitude, station.longitude);
+    });
+
+    var distances = [];
+
+    for (var stationNumber in stations) { 
+        var location = stations[stationNumber];
+        var place = new google.maps.LatLng(userloc.geometry.location.lat(),userloc.geometry.location.lng())
+        var distance = google.maps.geometry.spherical.computeDistanceBetween(place, location);
+        distances.push({Station:stationNumber, distance:distance})
+    }
+
+    distances = distances.sort((a, b) => a.distance - b.distance)
+    return distances
+}
+
+
+
+function allStationDistancesEnd(){
+    stations = {}
+    bikeData.forEach(station => {
+        stations[station.number] = new google.maps.LatLng(station.latitude, station.longitude);
+    });
+
+    var distances = [];
+
+    for (var stationNumber in stations) { 
+        var location = stations[stationNumber];
+        var place = new google.maps.LatLng(destloc.geometry.location.lat(),destloc.geometry.location.lng())
+        var distance = google.maps.geometry.spherical.computeDistanceBetween(place, location);
+        distances.push({Station:stationNumber, distance:distance})
+    }
+
+    distances = distances.sort((a, b) => a.distance - b.distance)
+    return distances
+}
+
+
 function futureClosestStationStart(){
     stations = {}
     bikeData.forEach(station => {
@@ -139,7 +192,6 @@ function futureClosestStationStart(){
     }
 
     distances = distances.sort((a, b) => a.distance - b.distance)
-    console.log(distances)
     return(distances[0].Station)
 }
 
@@ -163,32 +215,25 @@ function futureClosestStationEnd(){
     return(distances[0].Station)
 }
    
-function routePlanning(){
-    if (future==false){
-        showRoute()
-    }
-    else{
-
-        let payload = {
-            my_data: document.getElementById("toggle-date").value,
-            id1: futureClosestStationStart(),
-            id2: futureClosestStationEnd()
-        };
-
-        //Implement ML
-        fetch('/my_endpoint', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        })
-        .then(response => response.json())
-        //.then(data => console.log(data))
-    }
-    
-        
-    }
+// function routePlanning(){
+//     if (future==false){
+//         showRoute()
+//     }
+//     else{
+//         dists = allStationDistances()
+//         date = document.getElementById('toggle-date').value
+//         dists[0]['date'] = date
+//         fetch('/my_endpoint', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify(dists[0])
+//         })
+//         .then(response => response.json())
+//         .then (results => {})
+//     }   
+//     }
 
 
 
@@ -347,6 +392,19 @@ function findClosestStationStart(){
     else{
         //Implement getting data from ML
 
+        dists = allStationDistancesStart()
+        date = document.getElementById('toggle-date').value
+        dists[0]['date'] = date
+        fetch('/my_endpoint', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dists[0])
+        })
+        .then(response => response.json())
+        .then (results => {return new google.maps.LatLng(getStationByID(results).lat(), getStationByID(results).lng())})
+
     }
 
 
@@ -377,6 +435,18 @@ function findClosestStationEnd(){
 }
     else{
         //Implement getting data from ML
+        dists = allStationDistancesEnd()
+        date = document.getElementById('toggle-date').value
+        dists[0]['date'] = date
+        fetch('/my_endpoint', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dists[0])
+        })
+        .then(response => response.json())
+        .then (results => {return new google.maps.LatLng(getStationByID(results).lat(), getStationByID(results).lng())})
     }
 
     var distances = [];
