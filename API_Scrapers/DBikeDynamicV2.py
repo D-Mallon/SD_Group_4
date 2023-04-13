@@ -2,13 +2,24 @@ import mysql.connector
 import requests
 import json
 import datetime
+import configparser
+
+config = configparser.ConfigParser()
+config.read('/Users/dmallon/Desktop/GitHubRepositories/SD_Group_4/config.ini')
+
+db_host = config.get('Database', 'db_host')
+db_user = config.get('Database', 'db_user')
+db_password = config.get('Database', 'db_password')
+db_database_static = config.get('Database', 'staticDatabase')
+db_database_dynamic = config.get('Database', 'dynamicDatabase')
+bike_api = config.get('api_keys', 'bike_api')
 
 #connects and creates database if not exists. 
 try:
     mydb = mysql.connector.connect(
-    host="",
-    user="",
-    password=""
+    host=db_host,
+    user=db_user,
+    password=db_password
     )
     mycursor = mydb.cursor()
 
@@ -27,9 +38,9 @@ except:
 
 #Connect to MySQLServer with proper db
 mydb = mysql.connector.connect(
-  host="",
-  user="",
-  password="",
+  host=db_host,
+  user=db_user,
+  password=db_password,
   database="DBikeDynamicV2"
 )
 mycursor = mydb.cursor()
@@ -57,7 +68,7 @@ numls = [42, 30, 54, 108, 20, 56, 6, 18, 32, 52, 48, 13, 43, 31, 98, 14, 1, 23, 
 88]
 
 for i in numls:
-    response = requests.get(f"https://api.jcdecaux.com/vls/v1/stations/{i}?apiKey=cd0f042a0fe994456333c463ac937795b92de9eb&contract=dublin")
+    response = requests.get(f"https://api.jcdecaux.com/vls/v1/stations/{i}?apiKey={bike_api}&contract=dublin")
     data = response.text
     data = json.loads(data)
     availableBikes = data['available_bikes']

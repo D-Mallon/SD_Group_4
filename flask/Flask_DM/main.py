@@ -4,18 +4,29 @@ from pymysql.cursors import DictCursor
 from datetime import datetime, timedelta
 import json
 import logging
+import configparser
 
 logging.basicConfig(level=logging.DEBUG)
+
+config = configparser.ConfigParser()
+config.read('/Users/dmallon/Desktop/GitHubRepositories/SD_Group_4/config.ini')
+
+google_maps_api_key = config.get('api_keys', 'GOOGLE_MAPS_API_KEY')
+db_host = config.get('Database', 'db_host')
+db_user = config.get('Database', 'db_user')
+db_password = config.get('Database', 'db_password')
+db_database_static = config.get('Database', 'staticDatabase')
+db_database_dynamic = config.get('Database', 'dynamicDatabase')
 
 
 app = Flask(__name__)
 
 def get_dynamic_data():
     mydb_dynamic = pymysql.connect(
-        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
-        user="admin",
-        password="COMP30830Group4!",
-        database="DBikeDynamicV2"
+        host= db_host,
+        user= db_user,
+        password= db_password,
+        database= db_database_dynamic
     )
 
     mycursor = mydb_dynamic.cursor(DictCursor)
@@ -40,7 +51,8 @@ def get_dynamic_data():
 def main_page():
     dynamic_data = get_dynamic_data()
 
-    return render_template('index.html', dynamic_data=dynamic_data)
+    return render_template('index.html', dynamic_data=dynamic_data, google_maps_api_key=google_maps_api_key)
+
 
 
 # retrieves the bike station data from the DBikeStatic and DBikeDynamicV2 databases, merges the data into a list of dictionaries, and returns the data as a JSON response.
@@ -52,10 +64,10 @@ def bike_stations():
 
     # Fetch the static data
     mydb_static = pymysql.connect(
-        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
-        user="admin",
-        password="COMP30830Group4!",
-        database="DBikeStatic"
+        host= db_host,
+        user= db_user,
+        password= db_password,
+        database= db_database_static
     )
 
     mycursor = mydb_static.cursor(DictCursor)
@@ -87,10 +99,10 @@ def bike_stations():
 def station_data(station_id):
     # Connect to the dynamic database
     mydb = pymysql.connect(
-        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
-        user="admin",
-        password="COMP30830Group4!",
-        database="DBikeDynamicV2"
+        host= db_host,
+        user= db_user,
+        password= db_password,
+        database= db_database_dynamic
     )
 
     mycursor = mydb.cursor(DictCursor)
@@ -141,10 +153,10 @@ def station_data(station_id):
 def average_station_data(station_number):
     # Connect to the dynamic database
     mydb = pymysql.connect(
-        host="dbdatabase.csgc5rg5crt4.us-east-1.rds.amazonaws.com",
-        user="admin",
-        password="COMP30830Group4!",
-        database="DBikeDynamicV2"
+        host= db_host,
+        user= db_user,
+        password= db_password,
+        database= db_database_dynamic
     )
 
     cur = mydb.cursor(DictCursor)

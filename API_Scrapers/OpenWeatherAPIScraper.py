@@ -2,12 +2,20 @@ import requests
 import json
 import mysql.connector
 import datetime
+import configparser
+
+config = configparser.ConfigParser()
+config.read('/Users/dmallon/Desktop/GitHubRepositories/SD_Group_4/config.ini')
+
+db_host = config.get('Database', 'db_host')
+db_user = config.get('Database', 'db_user')
+db_password = config.get('Database', 'db_password')
 
 #Connector information for main RDS database
 mydb = mysql.connector.connect(
-host = "",
-user="",
-password = "")
+host = db_host,
+user= db_user,
+password = db_password)
 mycursor = mydb.cursor()
 
 #Openweather API connection and loading data
@@ -27,9 +35,9 @@ mydb.close()
 
 #recconects with proper db
 mydb = mysql.connector.connect(
-host = "",
-user="",
-password = "",
+host = db_host,
+user= db_user,
+password = db_password,
 database = "openweatherapi")
 mycursor = mydb.cursor()
 

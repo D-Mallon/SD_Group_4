@@ -1,9 +1,22 @@
 import requests
 import json
 import mysql.connector
+import configparser
+
+config = configparser.ConfigParser()
+config.read('/Users/dmallon/Desktop/GitHubRepositories/SD_Group_4/config.ini')
+
+google_maps_api_key = config.get('api_keys', 'GOOGLE_MAPS_API_KEY')
+db_host = config.get('Database', 'db_host')
+db_user = config.get('Database', 'db_user')
+db_password = config.get('Database', 'db_password')
+db_database_static = config.get('Database', 'staticDatabase')
+db_database_dynamic = config.get('Database', 'dynamicDatabase')
+bike_api = config.get('api_keys', 'bike_api')
+
 
 #"https://api.jcdecaux.com/vls/v1/stations",
-#"apiKey":'cd0f042a0fe994456333c463ac937795b92de9eb',
+#"apiKey":'',
 #"contract": "dublin"})
 
 #station numbers for dublin
@@ -13,9 +26,9 @@ numls = [42, 30, 54, 108, 20, 56, 6, 18, 32, 52, 48, 13, 43, 31, 98, 14, 1, 23, 
 
 #Connector information for main RDS database
 mydb = mysql.connector.connect(
-host = "",
-user="",
-password = "")
+host = db_host,
+user= db_user,
+password = db_password)
 mycursor = mydb.cursor()
 
 #creates initial db
@@ -30,9 +43,9 @@ mydb.close()
 
 #recconects with proper db
 mydb = mysql.connector.connect(
-host = "",
-user="",
-password = "",
+host = db_host,
+user=db_user,
+password = db_password,
 database = "DBikeStatic")
 mycursor = mydb.cursor()
 
@@ -59,7 +72,7 @@ mycursor.execute(sqldel)
 #Iterates through list of station numbers, retreives data and uploads to table
 for item in numls:
 
-    res = requests.get(f"https://api.jcdecaux.com/vls/v1/stations/{item}?apiKey=cd0f042a0fe994456333c463ac937795b92de9eb&contract=dublin")
+    res = requests.get(f"https://api.jcdecaux.com/vls/v1/stations/{item}?apiKey={bike_api}&contract=dublin")
     data = json.loads(res.text)
     
     number = data.get('number')
