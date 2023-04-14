@@ -31,14 +31,188 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <title>Dublin Bikes</title>
     <title>Dublin Bikes</title>
+
+    <style>
+      input {
+        float: right;
+      }
+
+      #route {
+        float: right;
+      }
+
+      .input-container {
+        position: relative;
+        width: 200px; /* set the width of the input container as needed */
+      }
+
+      .input-container input {
+        width: 100%;
+        height: 30px; /* set the height of the input boxes as needed */
+        padding: 10px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 10px; /* add a margin between the input boxes */
+      }
+
+      .input-container input[type="button"] {
+        width: 100%;
+        height: 40px; /* set the height of the button as needed */
+        padding: 10px;
+        box-sizing: border-box;
+        border: none;
+        border-radius: 5px;
+
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .input-container input[type="button"]:hover {
+        background-color: #095c1e;
+      }
+
+      .input-container input:first-child {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      .input-container input:last-child {
+        position: absolute;
+        top: 50px; /* adjust the top position as needed */
+        left: 0;
+      }
+
+      .input-container input[type="text"] {
+        position: relative;
+        top: 10px;
+        left: 10px;
+      }
+
+      .input-container input[type="date"] {
+        margin-top: 135px;
+      }
+
+      .input-container input[type="button"] {
+        position: relative;
+        top: 10px;
+        left: 10px;
+      }
+
+      .toggle-container {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+        margin-top: 10px;
+      }
+
+      .toggle-label {
+        position: absolute;
+        top: 0;
+        left: 10px;
+        width: 60px;
+        height: 34px;
+        border-radius: 34px;
+        background-color: #ccc;
+        cursor: pointer;
+      }
+
+      .toggle-label:after {
+        content: "";
+        display: block;
+        width: 26px;
+        height: 26px;
+        margin: 4px;
+        border-radius: 50%;
+        background-color: #fff;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s;
+      }
+
+      .toggle-checkbox {
+        display: none;
+      }
+
+      .toggle-checkbox:checked + .toggle-label {
+        background-color: #6ab04c;
+      }
+
+      .toggle-checkbox:checked + .toggle-label:after {
+        transform: translateX(26px);
+      }
+
+      #labelText {
+        padding-top: 3px;
+        padding-left: 80px;
+        font-size: large;
+        white-space: nowrap;
+      }
+
+      #toggle-date {
+        display: none;
+        margin-left: 30px;
+      }
+
+      .weather-container {
+        padding-top: 0px;
+        padding-right: 20px;
+        float: right;
+      }
+
+      #weather {
+        position: absolute;
+        top: 510px;
+        right: 50px;
+        height: 150px;
+        width: 150px;
+      }
+    </style>
   </head>
   <body>
     <div id="map" style="height: 500px; width: 100%"></div>
-    <input id="autocompleteStart" placeholder="Enter a place" type="text" />
-    <input id="autocompleteEnd" placeholder="Enter a place" type="text" />
-    <button onclick="showRoute()">Test</button>
+
+    <div class="info-container">
+      <div class="input-container">
+        <input
+          id="autocompleteStart"
+          placeholder="Enter a place"
+          type="text"
+        /><br />
+        <input id="autocompleteEnd" placeholder="Enter a place" type="text" />
+        <input
+          type="button"
+          value="Get Route"
+          id="route"
+          onclick="showRoute()"
+        />
+        <form>
+          <input type="date" id="toggle-date" name="date" />
+        </form>
+      </div>
+      <div class="toggle-container">
+        <label id="labelText">Select Date</label>
+        <input
+          type="checkbox"
+          id="toggle-switch"
+          name="toggle-switch"
+          class="toggle-checkbox"
+          onchange="handleDate()"
+        />
+
+        <label for="toggle-switch" class="toggle-label"></label>
+      </div>
+      <div class="weather-container">
+        <img id="weather" src="" />
+      </div>
+    </div>
+
     <div id="chart-container" style="display: none">
       <canvas id="todayChart"></canvas>
       <canvas id="yesterdayChart"></canvas>

@@ -9,6 +9,7 @@ let directionsService;
 let directionsRenderer;
 let map;
 let shouldCloseCharts = false;
+let future = false;
 
 //initializes a Google Map and creates markers for each bike station using the data obtained from the server
 function initMap() {
@@ -62,7 +63,7 @@ function initMap() {
     const marker = new google.maps.Marker({
       position: { lat: station.latitude, lng: station.longitude },
       map: map,
-      draggable: false,
+      draggable: true,
       animation: google.maps.Animation.DROP,
       title: station.name,
       icon: {
@@ -125,19 +126,341 @@ function initMap() {
   });
 }
 
+function getStationByID(id) {
+  stations = {};
+  bikeData.forEach((station) => {
+    stations[station.number] = new google.maps.LatLng(
+      station.latitude,
+      station.longitude
+    );
+  });
+  return stations[id];
+}
+
+function futureRoute() {}
+
+function allStationDistancesStart() {
+  stations = {};
+  bikeData.forEach((station) => {
+    stations[station.number] = new google.maps.LatLng(
+      station.latitude,
+      station.longitude
+    );
+  });
+
+  var distances = [];
+
+  for (var stationNumber in stations) {
+    var location = stations[stationNumber];
+    var place = new google.maps.LatLng(
+      userloc.geometry.location.lat(),
+      userloc.geometry.location.lng()
+    );
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(
+      place,
+      location
+    );
+    distances.push({ Station: stationNumber, distance: distance });
+  }
+
+  distances = distances.sort((a, b) => a.distance - b.distance);
+  return distances;
+}
+
+function allStationDistancesEnd() {
+  stations = {};
+  bikeData.forEach((station) => {
+    stations[station.number] = new google.maps.LatLng(
+      station.latitude,
+      station.longitude
+    );
+  });
+
+  var distances = [];
+
+  for (var stationNumber in stations) {
+    var location = stations[stationNumber];
+    var place = new google.maps.LatLng(
+      destloc.geometry.location.lat(),
+      destloc.geometry.location.lng()
+    );
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(
+      place,
+      location
+    );
+    distances.push({ Station: stationNumber, distance: distance });
+  }
+
+  distances = distances.sort((a, b) => a.distance - b.distance);
+  return distances;
+}
+
+function futureClosestStationStart() {
+  stations = {};
+  bikeData.forEach((station) => {
+    if (station.available_bikes != 0) {
+      stations[station.number] = new google.maps.LatLng(
+        station.latitude,
+        station.longitude
+      );
+    }
+  });
+
+  var distances = [];
+
+  for (var stationNumber in stations) {
+    var location = stations[stationNumber];
+    var place = new google.maps.LatLng(
+      userloc.geometry.location.lat(),
+      userloc.geometry.location.lng()
+    );
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(
+      place,
+      location
+    );
+    distances.push({ Station: stationNumber, distance: distance });
+  }
+
+  distances = distances.sort((a, b) => a.distance - b.distance);
+  return distances[0].Station;
+}
+
+function futureClosestStationEnd() {
+  stations = {};
+  bikeData.forEach((station) => {
+    if (station.available_bikes != 0) {
+      stations[station.number] = new google.maps.LatLng(
+        station.latitude,
+        station.longitude
+      );
+    }
+  });
+
+  var distances = [];
+
+  for (var stationNumber in stations) {
+    var location = stations[stationNumber];
+    var place = new google.maps.LatLng(
+      destloc.geometry.location.lat(),
+      destloc.geometry.location.lng()
+    );
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(
+      place,
+      location
+    );
+    distances.push({ Station: stationNumber, distance: distance });
+  }
+
+  distances = distances.sort((a, b) => a.distance - b.distance);
+  return distances[0].Station;
+}
+
+// function routePlanning(){
+//     if (future==false){
+//         showRoute()
+//     }
+//     else{
+//         dists = allStationDistances()
+//         date = document.getElementById('toggle-date').value
+//         dists[0]['date'] = date
+//         fetch('/my_endpoint', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify(dists[0])
+//         })
+//         .then(response => response.json())
+//         .then (results => {})
+//     }
+//     }
+
+function getStationByID(id) {
+  stations = {};
+  bikeData.forEach((station) => {
+    stations[station.number] = new google.maps.LatLng(
+      station.latitude,
+      station.longitude
+    );
+  });
+  return stations[id];
+}
+
+function futureRoute() {}
+
+function allStationDistancesStart() {
+  stations = {};
+  bikeData.forEach((station) => {
+    stations[station.number] = new google.maps.LatLng(
+      station.latitude,
+      station.longitude
+    );
+  });
+
+  var distances = [];
+
+  for (var stationNumber in stations) {
+    var location = stations[stationNumber];
+    var place = new google.maps.LatLng(
+      userloc.geometry.location.lat(),
+      userloc.geometry.location.lng()
+    );
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(
+      place,
+      location
+    );
+    distances.push({ Station: stationNumber, distance: distance });
+  }
+
+  distances = distances.sort((a, b) => a.distance - b.distance);
+  return distances;
+}
+
+function allStationDistancesEnd() {
+  stations = {};
+  bikeData.forEach((station) => {
+    stations[station.number] = new google.maps.LatLng(
+      station.latitude,
+      station.longitude
+    );
+  });
+
+  var distances = [];
+
+  for (var stationNumber in stations) {
+    var location = stations[stationNumber];
+    var place = new google.maps.LatLng(
+      destloc.geometry.location.lat(),
+      destloc.geometry.location.lng()
+    );
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(
+      place,
+      location
+    );
+    distances.push({ Station: stationNumber, distance: distance });
+  }
+
+  distances = distances.sort((a, b) => a.distance - b.distance);
+  return distances;
+}
+
+function futureClosestStationStart() {
+  stations = {};
+  bikeData.forEach((station) => {
+    if (station.available_bikes != 0) {
+      stations[station.number] = new google.maps.LatLng(
+        station.latitude,
+        station.longitude
+      );
+    }
+  });
+
+  var distances = [];
+
+  for (var stationNumber in stations) {
+    var location = stations[stationNumber];
+    var place = new google.maps.LatLng(
+      userloc.geometry.location.lat(),
+      userloc.geometry.location.lng()
+    );
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(
+      place,
+      location
+    );
+    distances.push({ Station: stationNumber, distance: distance });
+  }
+
+  distances = distances.sort((a, b) => a.distance - b.distance);
+  return distances[0].Station;
+}
+
+function futureClosestStationEnd() {
+  stations = {};
+  bikeData.forEach((station) => {
+    if (station.available_bikes != 0) {
+      stations[station.number] = new google.maps.LatLng(
+        station.latitude,
+        station.longitude
+      );
+    }
+  });
+
+  var distances = [];
+
+  for (var stationNumber in stations) {
+    var location = stations[stationNumber];
+    var place = new google.maps.LatLng(
+      destloc.geometry.location.lat(),
+      destloc.geometry.location.lng()
+    );
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(
+      place,
+      location
+    );
+    distances.push({ Station: stationNumber, distance: distance });
+  }
+
+  distances = distances.sort((a, b) => a.distance - b.distance);
+  return distances[0].Station;
+}
+
+// function routePlanning(){
+//     if (future==false){
+//         showRoute()
+//     }
+//     else{
+//         dists = allStationDistances()
+//         date = document.getElementById('toggle-date').value
+//         dists[0]['date'] = date
+//         fetch('/my_endpoint', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify(dists[0])
+//         })
+//         .then(response => response.json())
+//         .then (results => {})
+//     }
+//     }
+
 function onPlaceChangedStart() {
   userloc = autocompleteStart.getPlace();
 }
 
-function onPlaceChangedEnd() {
-  destloc = autocompleteEnd.getPlace();
+function initWeather() {
+  var weatherImage = document.getElementById("weather");
+  if (weatherData[0]["Main"] == "Rain") {
+    weatherImage.src =
+      "https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/Rain.png?raw=true";
+  } else if (weatherData[0]["Main"] == "Clouds") {
+    weatherImage.src =
+      "https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/Cloudy.png?raw=true";
+  } else if (weatherData[0]["Main"] == "Drizzle") {
+    weatherImage.src =
+      "https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/Rain.png?raw=true";
+  } else if (weatherData[0]["Main"] == "Clear") {
+    weatherImage.src =
+      "https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/clear.png?raw=true";
+  } else if (weatherData[0]["Main"] == "Mist") {
+    weatherImage.src =
+      "https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/foggy.jpg?raw=true";
+  } else if (weatherData[0]["Main"] == "Fog") {
+    weatherImage.src =
+      "https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/foggy.jpg?raw=true";
+  }
 }
 
 async function fetchData() {
   try {
     const response = await fetch("/bike_stations");
     bikeData = await response.json();
+
+    const weather = await fetch("/weather_data");
+    weatherData = await weather.json();
+    console.log(weatherData);
     initMap();
+    initWeather();
   } catch (error) {
     console.error("Error fetching bike data:", error);
   }
@@ -246,18 +569,41 @@ function initCharts() {
 fetchData().then(() => {
   initMap();
   initCharts();
+  initWeather();
 });
 
 function findClosestStationStart() {
-  stations = {};
-  bikeData.forEach((station) => {
-    if (station.available_bikes != 0) {
-      stations[station.name] = new google.maps.LatLng(
-        station.latitude,
-        station.longitude
-      );
-    }
-  });
+  if (future == false) {
+    stations = {};
+    bikeData.forEach((station) => {
+      if (station.available_bikes != 0) {
+        stations[station.name] = new google.maps.LatLng(
+          station.latitude,
+          station.longitude
+        );
+      }
+    });
+  } else {
+    //Implement getting data from ML
+
+    dists = allStationDistancesStart();
+    date = document.getElementById("toggle-date").value;
+    dists[0]["date"] = date;
+    fetch("/my_endpoint", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dists[0]),
+    })
+      .then((response) => response.json())
+      .then((results) => {
+        return new google.maps.LatLng(
+          getStationByID(results).lat(),
+          getStationByID(results).lng()
+        );
+      });
+  }
 
   var distances = [];
 
@@ -284,15 +630,36 @@ function findClosestStationStart() {
 }
 
 function findClosestStationEnd() {
-  stations = {};
-  bikeData.forEach((station) => {
-    if (station.available_bikes != 0) {
-      stations[station.name] = new google.maps.LatLng(
-        station.latitude,
-        station.longitude
-      );
-    }
-  });
+  if ((future = false)) {
+    stations = {};
+    bikeData.forEach((station) => {
+      if (station.available_bikes != 0) {
+        stations[station.name] = new google.maps.LatLng(
+          station.latitude,
+          station.longitude
+        );
+      }
+    });
+  } else {
+    //Implement getting data from ML
+    dists = allStationDistancesEnd();
+    date = document.getElementById("toggle-date").value;
+    dists[0]["date"] = date;
+    fetch("/my_endpoint", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dists[0]),
+    })
+      .then((response) => response.json())
+      .then((results) => {
+        return new google.maps.LatLng(
+          getStationByID(results).lat(),
+          getStationByID(results).lng()
+        );
+      });
+  }
 
   var distances = [];
 
@@ -375,3 +742,14 @@ fetchData().then(() => {
   initMap();
   initCharts();
 });
+
+function handleDate() {
+  var date = document.getElementById("toggle-date");
+  if (date.style.display == "block") {
+    date.style.display = "none";
+    future = false;
+  } else {
+    date.style.display = "block";
+    future = true;
+  }
+}
