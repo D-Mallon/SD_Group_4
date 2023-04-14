@@ -31,6 +31,8 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <title>Dublin Bikes</title>
     <title>Dublin Bikes</title>
 
@@ -190,7 +192,9 @@
           id="route"
           onclick="showRoute()"
         />
-        <input type="date" id="toggle-date" name="date" />
+        <form>
+          <input type="date" id="toggle-date" name="date" />
+        </form>
       </div>
       <div class="toggle-container">
         <label id="labelText">Select Date</label>
@@ -218,15 +222,11 @@
       <canvas id="averageTodayChart"></canvas>
     </div>
 
-    <div id="average-chart-container" style="display: none">
-      <canvas id="averageTodayChart"></canvas>
-    </div>
-
     <!-- Map and API -->
     <script
+      src="https://maps.googleapis.com/maps/api/js?key={{google_maps_api_key}}&libraries=places,routes,geometry&callback=fetchData"
       async
       defer
-      src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initMap"
     ></script>
     <script src="/static/main.js"></script>
 

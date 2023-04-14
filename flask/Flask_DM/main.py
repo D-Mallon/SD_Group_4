@@ -4,6 +4,9 @@ from pymysql.cursors import DictCursor
 from datetime import datetime, timedelta
 import json
 import logging
+import machine_learning
+from datetime import datetime as dt
+
 import configparser
 
 logging.basicConfig(level=logging.DEBUG)
@@ -11,22 +14,25 @@ logging.basicConfig(level=logging.DEBUG)
 config = configparser.ConfigParser()
 config.read('/Users/dmallon/Desktop/GitHubRepositories/SD_Group_4/config.ini')
 
-google_maps_api_key = config.get('api_keys', 'GOOGLE_MAPS_API_KEY')
+google_maps_key = config.get('api_keys', 'GOOGLE_MAPS_API_KEY')
 db_host = config.get('Database', 'db_host')
 db_user = config.get('Database', 'db_user')
 db_password = config.get('Database', 'db_password')
 db_database_static = config.get('Database', 'staticDatabase')
 db_database_dynamic = config.get('Database', 'dynamicDatabase')
+config.read('config.ini')
 
 
 app = Flask(__name__)
 
+
+
 def get_dynamic_data():
     mydb_dynamic = pymysql.connect(
-        host= db_host,
-        user= db_user,
-        password= db_password,
-        database= db_database_dynamic
+        host=db_host,
+        user=db_user,
+        password=db_password,
+        database=db_database_dynamic
     )
 
     mycursor = mydb_dynamic.cursor(DictCursor)
@@ -47,11 +53,36 @@ def get_dynamic_data():
     mydb_dynamic.close()
     return dynamic_data
 
+def getWeatherData():
+    mydb_weather = pymysql.connect(
+        host=db_host,
+        user=db_user,
+        password=db_password,
+        database="openweatherapi"
+    )
+
+
+    mycursor = mydb_weather.cursor(DictCursor)
+    mycursor.execute("""SELECT Main
+    FROM openweatherapi.Weather
+    ORDER BY DateTime DESC LIMIT 1;""")
+
+    weatherData = mycursor.fetchall()
+    mycursor.close()
+    mydb_weather.close()
+    return weatherData
+
 @app.route('/')
 def main_page():
     dynamic_data = get_dynamic_data()
+    return render_template('index.html', dynamic_data=dynamic_data, google_maps_api_key=google_maps_key)
 
-    return render_template('index.html', dynamic_data=dynamic_data, google_maps_api_key=google_maps_api_key)
+
+@app.route("/weather_data")
+def weatherData():
+    weatherData = getWeatherData()
+    return jsonify(weatherData)
+
 
 
 
@@ -64,10 +95,10 @@ def bike_stations():
 
     # Fetch the static data
     mydb_static = pymysql.connect(
-        host= db_host,
-        user= db_user,
-        password= db_password,
-        database= db_database_static
+        host=db_host,
+        user=db_user,
+        password=db_password,
+        database=db_database_static
     )
 
     mycursor = mydb_static.cursor(DictCursor)
@@ -94,15 +125,38 @@ def bike_stations():
     # Return the data as JSON
     return jsonify(bike_data)
 
+def getFutureData(dateOrdinal,stationData):
+    bikes = False
+    i = 0
+    while i < len(stationData):
+        if machine_learning.machine_learn(dateOrdinal,stationData['Station'])[0] > 1:
+            bikes = True
+        i+=1
+        if bikes == True:
+            return(stationData['Station'])
+
+
+@app.route('/my_endpoint', methods=['POST'])
+def my_endpoint():
+    data = request.get_json()
+    date_string = data['date']
+    data.pop('date')
+    date = dt.strptime(date_string, '%Y-%m-%d').date()
+    ordinalDate = date.toordinal()
+    results = getFutureData(ordinalDate,data)
+    
+    return results
+
+
 # retrieves data for the specified bike station from the DBikeDynamicV2 database and returns the data as a JSON response.
 @app.route('/station_data/<int:station_id>')
 def station_data(station_id):
     # Connect to the dynamic database
     mydb = pymysql.connect(
-        host= db_host,
-        user= db_user,
-        password= db_password,
-        database= db_database_dynamic
+        host=db_host,
+        user=db_user,
+        password=db_password,
+        database=db_database_dynamic
     )
 
     mycursor = mydb.cursor(DictCursor)
@@ -153,10 +207,10 @@ def station_data(station_id):
 def average_station_data(station_number):
     # Connect to the dynamic database
     mydb = pymysql.connect(
-        host= db_host,
-        user= db_user,
-        password= db_password,
-        database= db_database_dynamic
+        host=db_host,
+        user=db_user,
+        password=db_password,
+        database=db_database_dynamic
     )
 
     cur = mydb.cursor(DictCursor)
@@ -191,11 +245,5 @@ def average_station_data(station_number):
 
 
 
-
-
-
-
 if __name__ == '__main__':
     app.run(debug=True)
-
-

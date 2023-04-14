@@ -8,8 +8,8 @@ let destloc;
 let directionsService;
 let directionsRenderer;
 let map;
-let shouldCloseCharts = false
-let future = false
+let shouldCloseCharts = false;
+let future = false;
 
 //initializes a Google Map and creates markers for each bike station using the data obtained from the server
 function initMap() {
@@ -71,44 +71,8 @@ function initMap() {
       },
     });
 
-    autocompleteEnd = new google.maps.places.Autocomplete(document.getElementById('autocompleteEnd'),
-    {
-        types:['establishment'],
-        componentRestrictions:{'country':['IE']},
-        fields:['place_id','geometry','name']
-    });
-
-    autocompleteStart.addListener ('place_changed', onPlaceChangedStart);
-    autocompleteEnd.addListener ('place_changed', onPlaceChangedEnd);
-
-    let activeInfoWindow; // Keep track of the currently open info window
-    let activeMarker; // Keep track of the currently active marker
-
-    bikeData.forEach((station) => {
-        const percentageAvailable = (station.available_bikes / station.capacity) * 100;
-
-        let markerColor;
-        if (percentageAvailable <= 10) {
-            markerColor = "red";
-        } else if (percentageAvailable >= 10.1 && percentageAvailable <= 75) {
-            markerColor = "blue";
-        } else {
-            markerColor = "green";
-        }
-
-        const marker = new google.maps.Marker({
-            position: { lat: station.latitude, lng: station.longitude },
-            map: map,
-            draggable: false,
-            animation: google.maps.Animation.DROP,
-            title: station.name,
-            icon: {
-                url: `http://maps.google.com/mapfiles/ms/icons/${markerColor}-dot.png`,
-            },
-        });
-
-        const infoWindow = new google.maps.InfoWindow({
-            content: `<div>
+    const infoWindow = new google.maps.InfoWindow({
+      content: `<div>
                         <h3>${station.name}</h3>
                         <p>Station Number: ${station.number}</p>
                         <p>Available Bikes: ${station.available_bikes}</p>
@@ -162,6 +126,155 @@ function initMap() {
   });
 }
 
+function getStationByID(id) {
+  stations = {};
+  bikeData.forEach((station) => {
+    stations[station.number] = new google.maps.LatLng(
+      station.latitude,
+      station.longitude
+    );
+  });
+  return stations[id];
+}
+
+function futureRoute() {}
+
+function allStationDistancesStart() {
+  stations = {};
+  bikeData.forEach((station) => {
+    stations[station.number] = new google.maps.LatLng(
+      station.latitude,
+      station.longitude
+    );
+  });
+
+  var distances = [];
+
+  for (var stationNumber in stations) {
+    var location = stations[stationNumber];
+    var place = new google.maps.LatLng(
+      userloc.geometry.location.lat(),
+      userloc.geometry.location.lng()
+    );
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(
+      place,
+      location
+    );
+    distances.push({ Station: stationNumber, distance: distance });
+  }
+
+  distances = distances.sort((a, b) => a.distance - b.distance);
+  return distances;
+}
+
+function allStationDistancesEnd() {
+  stations = {};
+  bikeData.forEach((station) => {
+    stations[station.number] = new google.maps.LatLng(
+      station.latitude,
+      station.longitude
+    );
+  });
+
+  var distances = [];
+
+  for (var stationNumber in stations) {
+    var location = stations[stationNumber];
+    var place = new google.maps.LatLng(
+      destloc.geometry.location.lat(),
+      destloc.geometry.location.lng()
+    );
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(
+      place,
+      location
+    );
+    distances.push({ Station: stationNumber, distance: distance });
+  }
+
+  distances = distances.sort((a, b) => a.distance - b.distance);
+  return distances;
+}
+
+function futureClosestStationStart() {
+  stations = {};
+  bikeData.forEach((station) => {
+    if (station.available_bikes != 0) {
+      stations[station.number] = new google.maps.LatLng(
+        station.latitude,
+        station.longitude
+      );
+    }
+  });
+
+  var distances = [];
+
+  for (var stationNumber in stations) {
+    var location = stations[stationNumber];
+    var place = new google.maps.LatLng(
+      userloc.geometry.location.lat(),
+      userloc.geometry.location.lng()
+    );
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(
+      place,
+      location
+    );
+    distances.push({ Station: stationNumber, distance: distance });
+  }
+
+  distances = distances.sort((a, b) => a.distance - b.distance);
+  return distances[0].Station;
+}
+
+function futureClosestStationEnd() {
+  stations = {};
+  bikeData.forEach((station) => {
+    if (station.available_bikes != 0) {
+      stations[station.number] = new google.maps.LatLng(
+        station.latitude,
+        station.longitude
+      );
+    }
+  });
+
+  var distances = [];
+
+  for (var stationNumber in stations) {
+    var location = stations[stationNumber];
+    var place = new google.maps.LatLng(
+      destloc.geometry.location.lat(),
+      destloc.geometry.location.lng()
+    );
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(
+      place,
+      location
+    );
+    distances.push({ Station: stationNumber, distance: distance });
+  }
+
+  distances = distances.sort((a, b) => a.distance - b.distance);
+  return distances[0].Station;
+}
+
+// function routePlanning(){
+//     if (future==false){
+//         showRoute()
+//     }
+//     else{
+//         dists = allStationDistances()
+//         date = document.getElementById('toggle-date').value
+//         dists[0]['date'] = date
+//         fetch('/my_endpoint', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify(dists[0])
+//         })
+//         .then(response => response.json())
+//         .then (results => {})
+//     }
+//     }
+
 function onPlaceChangedStart() {
   userloc = autocompleteStart.getPlace();
 }
@@ -170,48 +283,42 @@ function onPlaceChangedEnd() {
   destloc = autocompleteEnd.getPlace();
 }
 
-function initWeather(){
-    var weatherImage = document.getElementById('weather')
-    if(weatherData[0]['Main'] == 'Rain'){
-    weatherImage.src = 'https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/Rain.png?raw=true'
-    }
-
-    else if(weatherData[0]['Main'] == 'Clouds'){
-        weatherImage.src = 'https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/Cloudy.png?raw=true'
-    }
-
-    else if(weatherData[0]['Main'] == 'Drizzle'){
-        weatherImage.src = 'https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/Rain.png?raw=true'
-    }
-
-    else if(weatherData[0]['Main'] == 'Clear'){
-        weatherImage.src = 'https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/clear.png?raw=true'
-    }
-
-    else if(weatherData[0]['Main'] == 'Mist'){
-        weatherImage.src = 'https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/foggy.jpg?raw=true'
-    }
-
-    else if(weatherData[0]['Main'] == 'Fog'){
-        weatherImage.src = 'https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/foggy.jpg?raw=true'
-    }
-
+function initWeather() {
+  var weatherImage = document.getElementById("weather");
+  if (weatherData[0]["Main"] == "Rain") {
+    weatherImage.src =
+      "https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/Rain.png?raw=true";
+  } else if (weatherData[0]["Main"] == "Clouds") {
+    weatherImage.src =
+      "https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/Cloudy.png?raw=true";
+  } else if (weatherData[0]["Main"] == "Drizzle") {
+    weatherImage.src =
+      "https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/Rain.png?raw=true";
+  } else if (weatherData[0]["Main"] == "Clear") {
+    weatherImage.src =
+      "https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/clear.png?raw=true";
+  } else if (weatherData[0]["Main"] == "Mist") {
+    weatherImage.src =
+      "https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/foggy.jpg?raw=true";
+  } else if (weatherData[0]["Main"] == "Fog") {
+    weatherImage.src =
+      "https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/foggy.jpg?raw=true";
+  }
 }
 
 async function fetchData() {
-    try {
-        const response = await fetch("/bike_stations");
-        bikeData = await response.json();
+  try {
+    const response = await fetch("/bike_stations");
+    bikeData = await response.json();
 
-        const weather = await fetch("/weather_data")
-        weatherData = await weather.json();
-        console.log(weatherData)
-        initMap();
-        initWeather();
-
-    } catch (error) {
-        console.error("Error fetching bike data:", error);
-    }
+    const weather = await fetch("/weather_data");
+    weatherData = await weather.json();
+    console.log(weatherData);
+    initMap();
+    initWeather();
+  } catch (error) {
+    console.error("Error fetching bike data:", error);
+  }
 }
 
 async function onMarkerClick(stationNumber) {
@@ -314,118 +421,58 @@ function initCharts() {
   );
 }
 
-
-
 fetchData().then(() => {
-    initMap();
-    initCharts();
-    initWeather();
+  initMap();
+  initCharts();
+  initWeather();
 });
 
-
-function findClosestStationStart(){
-    if(future == false){
-    stations = {}
-    bikeData.forEach(station => {
-        if (station.available_bikes != 0){
-        stations[station.name] = new google.maps.LatLng(station.latitude, station.longitude)};
+function findClosestStationStart() {
+  if (future == false) {
+    stations = {};
+    bikeData.forEach((station) => {
+      if (station.available_bikes != 0) {
+        stations[station.name] = new google.maps.LatLng(
+          station.latitude,
+          station.longitude
+        );
+      }
     });
-}
-    else{
-        //Implement getting data from ML
-    }
+  } else {
+    //Implement getting data from ML
 
-
-    var distances = [];
-
-    for (var stationName in stations) {
-        var location = stations[stationName];
-        var place = new google.maps.LatLng(userloc.geometry.location.lat(),userloc.geometry.location.lng())
-        var distance = google.maps.geometry.spherical.computeDistanceBetween(place, location);
-        distances.push({Station:stationName, distance:distance}) 
-    }
-  });
+    dists = allStationDistancesStart();
+    date = document.getElementById("toggle-date").value;
+    dists[0]["date"] = date;
+    fetch("/my_endpoint", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dists[0]),
+    })
+      .then((response) => response.json())
+      .then((results) => {
+        return new google.maps.LatLng(
+          getStationByID(results).lat(),
+          getStationByID(results).lng()
+        );
+      });
+  }
 
   var distances = [];
 
-    distances = distances.sort((a, b) => a.distance - b.distance)
-    
-    result = new google.maps.LatLng(stations[distances[0].Station].lat(), stations[distances[0].Station].lng())
-    return result
-}
-
-function findClosestStationEnd(){
-    if(future=false){
-    stations = {}
-    bikeData.forEach(station => {
-        if (station.available_bikes != 0){
-        stations[station.name] = new google.maps.LatLng(station.latitude, station.longitude)};
-    });
-}
-    else{
-        //Implement getting data from ML
-    }
-
-    var distances = [];
-
-    for (var stationName in stations) {
-        var location = stations[stationName];
-        var place = new google.maps.LatLng(destloc.geometry.location.lat(),destloc.geometry.location.lng())
-        var distance = google.maps.geometry.spherical.computeDistanceBetween(place, location);
-        distances.push({Station:stationName, distance:distance}) 
-    }
-
-    
-
-    distances = distances.sort((a, b) => a.distance - b.distance)
-
-    result = new google.maps.LatLng(stations[distances[0].Station].lat(), stations[distances[0].Station].lng())
-    return result
-}
-
-
-function showRoute() {
-    var request1 = {
-      origin: new google.maps.LatLng(userloc.geometry.location.lat(),userloc.geometry.location.lng()),
-      destination: findClosestStationStart(),
-      travelMode: 'WALKING'
-    };
-  
-    var request2 = {
-      origin: findClosestStationStart(),
-      destination: findClosestStationEnd(),
-      travelMode: 'BICYCLING'
-    };
-  
-    var request3 = {
-      origin: findClosestStationEnd(),
-      destination: new google.maps.LatLng(destloc.geometry.location.lat(),destloc.geometry.location.lng()),
-      travelMode: 'WALKING'
-    };
-  
-    directionsService.route(request1, function(result1, status1) {
-      if (status1 == 'OK') {
-        directionsService.route(request2, function(result2, status2) {
-          if (status2 == 'OK') {
-            directionsService.route(request3, function(result3, status3) {
-              if (status3 == 'OK') {
-                // Combine the three legs into a single result
-                var combinedResult = result1;
-                combinedResult.routes[0].legs.push.apply(combinedResult.routes[0].legs, result2.routes[0].legs);
-                combinedResult.routes[0].legs.push.apply(combinedResult.routes[0].legs, result3.routes[0].legs);
-  
-                // Display the combined result on the map
-                directionsRenderer.setDirections(combinedResult);
-                directionsRenderer.setMap(map);
-                console.log(combinedResult.routes[0].legs[0].duration.text)
-              }
-            });
-          }
-        });
-      }
-    });
-  
-    
+  for (var stationName in stations) {
+    var location = stations[stationName];
+    var place = new google.maps.LatLng(
+      userloc.geometry.location.lat(),
+      userloc.geometry.location.lng()
+    );
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(
+      place,
+      location
+    );
+    distances.push({ Station: stationName, distance: distance });
   }
 
   distances = distances.sort((a, b) => a.distance - b.distance);
@@ -438,15 +485,36 @@ function showRoute() {
 }
 
 function findClosestStationEnd() {
-  stations = {};
-  bikeData.forEach((station) => {
-    if (station.available_bikes != 0) {
-      stations[station.name] = new google.maps.LatLng(
-        station.latitude,
-        station.longitude
-      );
-    }
-  });
+  if ((future = false)) {
+    stations = {};
+    bikeData.forEach((station) => {
+      if (station.available_bikes != 0) {
+        stations[station.name] = new google.maps.LatLng(
+          station.latitude,
+          station.longitude
+        );
+      }
+    });
+  } else {
+    //Implement getting data from ML
+    dists = allStationDistancesEnd();
+    date = document.getElementById("toggle-date").value;
+    dists[0]["date"] = date;
+    fetch("/my_endpoint", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dists[0]),
+    })
+      .then((response) => response.json())
+      .then((results) => {
+        return new google.maps.LatLng(
+          getStationByID(results).lat(),
+          getStationByID(results).lng()
+        );
+      });
+  }
 
   var distances = [];
 
@@ -526,18 +594,17 @@ function showRoute() {
 }
 
 fetchData().then(() => {
-    initMap();
-    initCharts();
+  initMap();
+  initCharts();
 });
 
-function handleDate(){
-    var date = document.getElementById('toggle-date')
-    if(date.style.display == 'block'){
-        date.style.display = 'none'
-        future = false
-    }
-    else{
-        date.style.display='block'
-        future = true
-    }
+function handleDate() {
+  var date = document.getElementById("toggle-date");
+  if (date.style.display == "block") {
+    date.style.display = "none";
+    future = false;
+  } else {
+    date.style.display = "block";
+    future = true;
+  }
 }
