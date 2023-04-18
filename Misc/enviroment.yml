@@ -1,7 +1,0 @@
-name: COMP30830Project
-channels:
-  - defaults
-dependencies:
-  - python
-  - requests
-prefix: /Users/eoin/opt/anaconda3/envs/COMP30830Project
