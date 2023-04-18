@@ -12,7 +12,7 @@ import configparser
 logging.basicConfig(level=logging.DEBUG)
 
 config = configparser.ConfigParser()
-config.read('/Users/dmallon/Desktop/GitHubRepositories/SD_Group_4/config.ini')
+config.read('/Users/eoin/Documents/GitHub/SD_Group_4/config.ini')
 
 google_maps_key = config.get('api_keys', 'GOOGLE_MAPS_API_KEY')
 db_host = config.get('Database', 'db_host')
@@ -63,13 +63,14 @@ def getWeatherData():
 
 
     mycursor = mydb_weather.cursor(DictCursor)
-    mycursor.execute("""SELECT Main
+    mycursor.execute("""SELECT Main,Temp,WindSpeed
     FROM openweatherapi.Weather
     ORDER BY DateTime DESC LIMIT 1;""")
 
     weatherData = mycursor.fetchall()
     mycursor.close()
     mydb_weather.close()
+    print(weatherData)
     return weatherData
 
 @app.route('/')

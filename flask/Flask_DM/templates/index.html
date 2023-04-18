@@ -201,7 +201,11 @@
 
       .weather-container {
         display: inline-block;
+        position: absolute;
+        left:10px;
       }
+
+
 
       #weather {
         height: 50px;
@@ -212,17 +216,26 @@
       #todayChart, #yesterdayChart, #dayBeforeYesterdayChart, #averageTodayChart {
         color: white;
       }
+
+      .weatherbar #Temp{
+        position: absolute;
+        left:80px;
+      }
+
+      .weatherbar #WindSpeed{
+        position: absolute;
+        left: 300px;
+      }
     </style>
   </head>
   <body>
     <div class="header-container">
+      <div class="weatherbar">
+        <p id="Temp"></p>
+        <p id="WindSpeed"></p>
+      </div>
       <div class="weather-container">
         <img id="weather" src="" />
-      </div>
-      <div class="weatherbar">
-        <p>sample</p>
-        <p>sample</p>
-        <p>sample</p>
       </div>
       <h1>Dublin Bike App</h1>
     </div>
