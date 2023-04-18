@@ -37,6 +37,42 @@
     <title>Dublin Bikes</title>
 
     <style>
+      body {
+        background-image: linear-gradient(to bottom right, #0000ff, #ccccff);
+      }
+      
+      .header-container {
+        height: 50px;
+        padding: 10px;
+
+      }
+
+      h1 {
+        color: white;
+        font-size: 24px;
+        margin: 0;
+        padding: 0;
+        float: right;
+      }
+
+      .weatherbar {
+        float: left;
+        margin: 0;
+        padding: 0
+      }
+
+      p {
+        display: inline-block;
+        color: white;
+        margin-right: 10px;
+      }
+
+      .map-container {
+        display: flex;
+        direction: column;
+        align-items: center;
+      }
+      
       input {
         float: right;
       }
@@ -74,7 +110,7 @@
       }
 
       .input-container input[type="button"]:hover {
-        background-color: #095c1e;
+        background-color: #0d1025;
       }
 
       .input-container input:first-child {
@@ -111,6 +147,7 @@
         width: 60px;
         height: 34px;
         margin-top: 10px;
+        margin-bottom: 10px;
       }
 
       .toggle-label {
@@ -141,7 +178,7 @@
       }
 
       .toggle-checkbox:checked + .toggle-label {
-        background-color: #6ab04c;
+        background-color: #0d1025;
       }
 
       .toggle-checkbox:checked + .toggle-label:after {
@@ -153,6 +190,7 @@
         padding-left: 80px;
         font-size: large;
         white-space: nowrap;
+        color: white;
       }
 
       #toggle-date {
@@ -161,22 +199,36 @@
       }
 
       .weather-container {
-        padding-top: 0px;
-        padding-right: 20px;
-        float: right;
+        display: inline-block;
       }
 
       #weather {
-        position: absolute;
-        top: 510px;
-        right: 50px;
-        height: 150px;
-        width: 150px;
+        height: 50px;
+        width: 50px;
+        vertical-align: middle;
+      }
+
+      #todayChart, #yesterdayChart, #dayBeforeYesterdayChart, #averageTodayChart {
+        color: white;
       }
     </style>
   </head>
   <body>
+    <div class="header-container">
+      <div class="weather-container">
+        <img id="weather" src="" />
+      </div>
+      <div class="weatherbar">
+        <p>sample</p>
+        <p>sample</p>
+        <p>sample</p>
+      </div>
+      <h1>Dublin Bike App</h1>
+    </div>
+
+    <div class="map-container">
     <div id="map" style="height: 500px; width: 100%"></div>
+    </div>
 
     <div class="info-container">
       <div class="input-container">
@@ -206,9 +258,6 @@
           onchange="handleDate()"
         />
         <label for="toggle-switch" class="toggle-label"></label>
-      </div>
-      <div class="weather-container">
-        <img id="weather" src="" />
       </div>
     </div>
 
