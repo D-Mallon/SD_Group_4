@@ -374,15 +374,15 @@ function getDayName(offset) {
 function initCharts() {
   const chartOptions = (title) => {
     return {
-      type: "bar",
+      type: "line",
       data: {
         labels: [],
         datasets: [
           {
             label: "Available Bikes",
             data: [],
-            backgroundColor: "rgba(75, 192, 192, 0.2)",
-            borderColor: "rgba(75, 192, 192, 1)",
+            backgroundColor: "#ffffff",
+            borderColor: "#ffffff",
             borderWidth: 1,
           },
         ],
