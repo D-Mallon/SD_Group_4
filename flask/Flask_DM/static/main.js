@@ -296,8 +296,8 @@ function kelvinToCelsius(kelvin) {
 function initWeather() {
   celsius = kelvinToCelsius(weatherData[0]['Temp'])
   var weatherImage = document.getElementById("weather");
-  document.getElementById("Temp").innerHTML = 'Temperature '+celsius+' Celsius'
-  document.getElementById("WindSpeed").innerHTML ='Wind Speed '+weatherData[0]['WindSpeed']+' Km/hr'
+   document.getElementById("Temp").innerHTML = 'Temperature: '+celsius+' Celsius'
+  document.getElementById("WindSpeed").innerHTML ='Wind Speed: '+weatherData[0]['WindSpeed']+' Km/hr'
   if (weatherData[0]["Main"] == "Rain") {
     weatherImage.src =
       "https://github.com/D-Mallon/SD_Group_4/blob/main/flask/Flask_DM/static/Images/Rain.png?raw=true";
