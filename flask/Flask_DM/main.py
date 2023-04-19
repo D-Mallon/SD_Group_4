@@ -12,6 +12,7 @@ import configparser
 logging.basicConfig(level=logging.DEBUG)
 
 config = configparser.ConfigParser()
+
 #config.read('/home/ubuntu/git/SD_Group_4/config.ini')
 config.read('/Users/dmallon/Desktop/GitHubRepositories/SD_Group_4/config.ini')
 
@@ -64,13 +65,14 @@ def getWeatherData():
 
 
     mycursor = mydb_weather.cursor(DictCursor)
-    mycursor.execute("""SELECT Main
+    mycursor.execute("""SELECT Main,Temp,WindSpeed
     FROM openweatherapi.Weather
     ORDER BY DateTime DESC LIMIT 1;""")
 
     weatherData = mycursor.fetchall()
     mycursor.close()
     mydb_weather.close()
+    print(weatherData)
     return weatherData
 
 @app.route('/')
