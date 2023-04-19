@@ -396,6 +396,7 @@ function initCharts() {
             data: [],
             backgroundColor: "#ffffff",
             borderColor: "#ffffff",
+            color: '#ffffff',
             borderWidth: 1,
           },
         ],
@@ -405,13 +406,37 @@ function initCharts() {
           title: {
             display: true,
             text: title,
+            color: '#ffffff',
+            font: {
+              color: '#ffffff'
+            }
           },
         },
         scales: {
+          x: {
+            ticks: {
+              color: '#ffffff'
+            },
+            grid: {
+              color: '#rgba(0, 0, 0, 0.2)'
+            }
+          },
           y: {
+            ticks: {
+              color: "#ffffff"
+            },
+            grid: {
+              color: 'rgba(0, 0, 0, 0.2)'
+            },
             beginAtZero: true,
+            
           },
         },
+        legend: {
+          labels: {
+            fontColor: '#ffffff'
+          }
+        }
       },
     };
   };
