@@ -12,6 +12,7 @@ import configparser
 logging.basicConfig(level=logging.DEBUG)
 
 config = configparser.ConfigParser()
+#config.read('/home/ubuntu/git/SD_Group_4/config.ini')
 config.read('/Users/dmallon/Desktop/GitHubRepositories/SD_Group_4/config.ini')
 
 google_maps_key = config.get('api_keys', 'GOOGLE_MAPS_API_KEY')
