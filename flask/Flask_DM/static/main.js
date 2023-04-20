@@ -638,11 +638,11 @@ fetchData().then(() => {
 
 function handleDate() {
   var date = document.getElementById("toggle-date");
-  if (date.style.display == "block") {
+  if (date.style.display == "inline") {
     date.style.display = "none";
     future = false;
   } else {
-    date.style.display = "block";
+    date.style.display = "inline";
     future = true;
   }
 }

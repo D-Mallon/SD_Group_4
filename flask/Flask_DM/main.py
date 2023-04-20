@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.DEBUG)
 config = configparser.ConfigParser()
 
 #config.read('/home/ubuntu/git/SD_Group_4/config.ini')
-config.read('/Users/dmallon/Desktop/GitHubRepositories/SD_Group_4/config.ini')
+config.read('/Users/eoin/Documents/GitHub/SD_Group_4/config.ini')
 
 google_maps_key = config.get('api_keys', 'GOOGLE_MAPS_API_KEY')
 db_host = config.get('Database', 'db_host')
@@ -143,6 +143,7 @@ def getFutureData(dateOrdinal,stationData):
 def my_endpoint():
     data = request.get_json()
     date_string = data['date']
+    print(date_string)
     data.pop('date')
     date = dt.strptime(date_string, '%Y-%m-%d').date()
     ordinalDate = date.toordinal()

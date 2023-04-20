@@ -13,14 +13,32 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn import preprocessing
 from IPython.display import display
+import logging
+import configparser
+
+logging.basicConfig(level=logging.DEBUG)
+
+config = configparser.ConfigParser()
+
+#config.read('/home/ubuntu/git/SD_Group_4/config.ini')
+config.read('/Users/eoin/Documents/GitHub/SD_Group_4/config.ini')
+
+
+google_maps_key = config.get('api_keys', 'GOOGLE_MAPS_API_KEY')
+db_host = config.get('Database', 'db_host')
+db_user = config.get('Database', 'db_user')
+db_password = config.get('Database', 'db_password')
+db_database_static = config.get('Database', 'staticDatabase')
+db_database_dynamic = config.get('Database', 'dynamicDatabase')
+config.read('config.ini')
 
 def machine_learn(stnID, dateordinal):
     #Connect to MySQLServer with proper db
     mydb = mysql.connector.connect(
-    host="",
-    user="",
-    password="",
-    database="DBikeDynamicV2"
+    host=db_host,
+        user=db_user,
+        password=db_password,
+        database=db_database_dynamic
     )
 
     #getting info from db into dicts
