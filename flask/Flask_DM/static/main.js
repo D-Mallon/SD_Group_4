@@ -74,9 +74,9 @@ function initMap() {
     const infoWindow = new google.maps.InfoWindow({
       content: `<div>
                         <h3>${station.name}</h3>
-                        <p>Station Number: ${station.number}</p>
-                        <p>Available Bikes: ${station.available_bikes}</p>
-                        <p>Capacity: ${station.capacity}</p>
+                        <p class='info'>Station Number: ${station.number}</p>
+                        <p class='info'>Available Bikes: ${station.available_bikes}</p>
+                        <p class='info'>Capacity: ${station.capacity}</p>
                       </div>`,
     });
 
@@ -434,7 +434,7 @@ function initCharts() {
         },
         legend: {
           labels: {
-            fontColor: '#ffffff'
+            fontColor: '#fffff'
           }
         }
       },
