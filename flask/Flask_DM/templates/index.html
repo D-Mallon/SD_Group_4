@@ -235,6 +235,13 @@
         position: absolute;
         left: 300px;
       }
+
+      .ml {
+        display: flex;
+        float: right;
+        margin-bottom: 50px;
+        margin-right: 200px;
+      }
     </style>
   </head>
   <body>
@@ -283,7 +290,11 @@
         />
         <label for="toggle-switch" class="toggle-label"></label>
       </div>
+      <div class="ml">
+        <p id="prediction">Sample text for the machine learning prediction</p>
+      </div>
     </div>
+    
 
     <div id="chart-container" style="display: none">
       <canvas id="todayChart"></canvas>
