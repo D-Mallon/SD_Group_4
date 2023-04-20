@@ -10,6 +10,7 @@ let directionsRenderer;
 let map;
 let shouldCloseCharts = false;
 let future = false;
+let message;
 
 //initializes a Google Map and creates markers for each bike station using the data obtained from the server
 function initMap() {
@@ -492,6 +493,11 @@ function findClosestStationStart() {
       .then((response) => response.json())
       .then((results) => {
         numBikes = results[1]
+        const para = document.createElement('p');
+        const message = document.createTextNode(`Predicted availability at station ${results[0]}: ${results[1]}\n`);
+        para.appendChild(message);
+        const element = document.getElementById('prediction');
+        element.appendChild(para);
         return new google.maps.LatLng(
           getStationByID(results[0]).lat(),
           getStationByID(results[0]).lng()
@@ -548,6 +554,11 @@ function findClosestStationEnd() {
     })
       .then((response) => response.json())
       .then((results) => {
+        const para = document.createElement('p');
+        const message = document.createTextNode(`Predicted availability at station ${results[0]}: ${results[1]}\n`);
+        para.appendChild(message);
+        const element = document.getElementById('prediction');
+        element.appendChild(para);
         return new google.maps.LatLng(
           getStationByID(results[0]).lat(),
           getStationByID(results[0]).lng()
@@ -647,3 +658,4 @@ function handleDate() {
     future = true;
   }
 }
+
