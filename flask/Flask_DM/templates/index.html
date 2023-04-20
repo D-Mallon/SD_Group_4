@@ -199,7 +199,8 @@
 
       #toggle-date {
         display: none;
-        margin-left: 30px;
+        margin-left: 220px;
+        margin-top: 45px;
       }
 
       .weather-container {
@@ -250,11 +251,15 @@
 
     <div class="info-container">
       <div class="input-container">
+        <form>
+          <input type="date" id="toggle-date" name="date"/>
+        </form>
         <input
           id="autocompleteStart"
           placeholder="Enter a place"
           type="text"
-        /><br />
+        />
+        <br />
         <input id="autocompleteEnd" placeholder="Enter a place" type="text" />
         <input
           type="button"
@@ -262,9 +267,6 @@
           id="route"
           onclick="showRoute()"
         />
-        <form>
-          <input type="date" id="toggle-date" name="date" />
-        </form>
       </div>
       <div class="toggle-container">
         <label id="labelText">Select Date</label>
