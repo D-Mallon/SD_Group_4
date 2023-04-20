@@ -491,9 +491,10 @@ function findClosestStationStart() {
     })
       .then((response) => response.json())
       .then((results) => {
+        numBikes = results[1]
         return new google.maps.LatLng(
-          getStationByID(results).lat(),
-          getStationByID(results).lng()
+          getStationByID(results[0]).lat(),
+          getStationByID(results[0]).lng()
         );
       });
   }
@@ -548,8 +549,8 @@ function findClosestStationEnd() {
       .then((response) => response.json())
       .then((results) => {
         return new google.maps.LatLng(
-          getStationByID(results).lat(),
-          getStationByID(results).lng()
+          getStationByID(results[0]).lat(),
+          getStationByID(results[0]).lng()
         );
       });
   }

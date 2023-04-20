@@ -13,8 +13,8 @@ logging.basicConfig(level=logging.DEBUG)
 
 config = configparser.ConfigParser()
 
-#config.read('/home/ubuntu/git/SD_Group_4/config.ini')
-config.read('/Users/eoin/Documents/GitHub/SD_Group_4/config.ini')
+config.read('/home/ubuntu/git/SD_Group_4/config.ini')
+#config.read('/Users/eoin/Documents/GitHub/SD_Group_4/config.ini')
 
 google_maps_key = config.get('api_keys', 'GOOGLE_MAPS_API_KEY')
 db_host = config.get('Database', 'db_host')
@@ -136,7 +136,8 @@ def getFutureData(dateOrdinal,stationData):
             bikes = True
         i+=1
         if bikes == True:
-            return(stationData['Station'])
+            dataArray = [stationData['Station'],machine_learning.machine_learn(dateOrdinal,stationData['Station'])[0]]
+            return(dataArray)
 
 
 @app.route('/my_endpoint', methods=['POST'])
