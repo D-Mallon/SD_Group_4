@@ -6,7 +6,7 @@ import configparser
 
 config = configparser.ConfigParser()
 config.read('/home/ubuntu/git/SD_Group_4/config.ini')
-#config.read('/Users/dmallon/Desktop/GitHubRepositories/SD_Group_4/config.ini')
+#config.read('/Users/eoin/Documents/GitHub/SD_Group_4/config.ini')
 
 db_host = config.get('Database', 'db_host')
 db_user = config.get('Database', 'db_user')

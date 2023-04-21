@@ -72,7 +72,6 @@ def getWeatherData():
     weatherData = mycursor.fetchall()
     mycursor.close()
     mydb_weather.close()
-    print(weatherData)
     return weatherData
 
 @app.route('/')
@@ -132,20 +131,19 @@ def getFutureData(dateOrdinal,stationData):
     bikes = False
     i = 0
     while i < len(stationData):
-        if machine_learning.machine_learn(dateOrdinal,stationData['Station'])[0] > 1:
+        if machine_learning.machine_learn(stationData[i]['Station'],dateOrdinal)[0] > 1:
             bikes = True
-        i+=1
+        
         if bikes == True:
-            dataArray = [stationData['Station'],machine_learning.machine_learn(dateOrdinal,stationData['Station'])[0]]
+            dataArray = [stationData[i]['Station'],machine_learning.machine_learn(stationData[i]['Station'],dateOrdinal)[0]]
             return(dataArray)
+        i+=1
 
 
 @app.route('/my_endpoint', methods=['POST'])
 def my_endpoint():
     data = request.get_json()
-    date_string = data['date']
-    print(date_string)
-    data.pop('date')
+    date_string = data[0]['date']
     date = dt.strptime(date_string, '%Y-%m-%d').date()
     ordinalDate = date.toordinal()
     results = getFutureData(ordinalDate,data)

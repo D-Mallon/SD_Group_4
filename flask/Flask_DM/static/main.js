@@ -196,85 +196,6 @@ function allStationDistancesEnd() {
   return distances;
 }
 
-function futureClosestStationStart() {
-  stations = {};
-  bikeData.forEach((station) => {
-    if (station.available_bikes != 0) {
-      stations[station.number] = new google.maps.LatLng(
-        station.latitude,
-        station.longitude
-      );
-    }
-  });
-
-  var distances = [];
-
-  for (var stationNumber in stations) {
-    var location = stations[stationNumber];
-    var place = new google.maps.LatLng(
-      userloc.geometry.location.lat(),
-      userloc.geometry.location.lng()
-    );
-    var distance = google.maps.geometry.spherical.computeDistanceBetween(
-      place,
-      location
-    );
-    distances.push({ Station: stationNumber, distance: distance });
-  }
-
-  distances = distances.sort((a, b) => a.distance - b.distance);
-  return distances[0].Station;
-}
-
-function futureClosestStationEnd() {
-  stations = {};
-  bikeData.forEach((station) => {
-    if (station.available_bikes != 0) {
-      stations[station.number] = new google.maps.LatLng(
-        station.latitude,
-        station.longitude
-      );
-    }
-  });
-
-  var distances = [];
-
-  for (var stationNumber in stations) {
-    var location = stations[stationNumber];
-    var place = new google.maps.LatLng(
-      destloc.geometry.location.lat(),
-      destloc.geometry.location.lng()
-    );
-    var distance = google.maps.geometry.spherical.computeDistanceBetween(
-      place,
-      location
-    );
-    distances.push({ Station: stationNumber, distance: distance });
-  }
-
-  distances = distances.sort((a, b) => a.distance - b.distance);
-  return distances[0].Station;
-}
-
-// function routePlanning(){
-//     if (future==false){
-//         showRoute()
-//     }
-//     else{
-//         dists = allStationDistances()
-//         date = document.getElementById('toggle-date').value
-//         dists[0]['date'] = date
-//         fetch('/my_endpoint', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify(dists[0])
-//         })
-//         .then(response => response.json())
-//         .then (results => {})
-//     }
-//     }
 
 function onPlaceChangedStart() {
   userloc = autocompleteStart.getPlace();
@@ -327,7 +248,6 @@ async function fetchData() {
 
     const weather = await fetch("/weather_data");
     weatherData = await weather.json();
-    console.log(weatherData);
     initMap();
     initWeather();
   } catch (error) {
@@ -488,7 +408,7 @@ function findClosestStationStart() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(dists[0]),
+      body: JSON.stringify(dists),
     })
       .then((response) => response.json())
       .then((results) => {
@@ -530,7 +450,7 @@ function findClosestStationStart() {
 }
 
 function findClosestStationEnd() {
-  if ((future = false)) {
+  if ((future == false)) {
     stations = {};
     bikeData.forEach((station) => {
       if (station.available_bikes != 0) {
@@ -550,7 +470,7 @@ function findClosestStationEnd() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(dists[0]),
+      body: JSON.stringify(dists),
     })
       .then((response) => response.json())
       .then((results) => {
@@ -591,23 +511,25 @@ function findClosestStationEnd() {
 }
 
 function showRoute() {
+  startClosest = findClosestStationStart()
+  endClosest = findClosestStationEnd()
   var request1 = {
     origin: new google.maps.LatLng(
       userloc.geometry.location.lat(),
       userloc.geometry.location.lng()
     ),
-    destination: findClosestStationStart(),
+    destination: startClosest,
     travelMode: "WALKING",
   };
 
   var request2 = {
-    origin: findClosestStationStart(),
-    destination: findClosestStationEnd(),
+    origin: startClosest,
+    destination: endClosest,
     travelMode: "BICYCLING",
   };
 
   var request3 = {
-    origin: findClosestStationEnd(),
+    origin: endClosest,
     destination: new google.maps.LatLng(
       destloc.geometry.location.lat(),
       destloc.geometry.location.lng()
