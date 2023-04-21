@@ -577,7 +577,7 @@ function handleDate() {
     future = false;
   } else {
     date.style.display = "inline";
-    future = false;
+    future = true;
   }
 }
 
