@@ -417,6 +417,7 @@ function findClosestStationStart() {
         const message = document.createTextNode(`Predicted availability at station ${results[0]}: ${results[1]}\n`);
         para.appendChild(message);
         const element = document.getElementById('prediction');
+        element.innerHTML = "";
         element.appendChild(para);
         return new google.maps.LatLng(
           getStationByID(results[0]).lat(),
