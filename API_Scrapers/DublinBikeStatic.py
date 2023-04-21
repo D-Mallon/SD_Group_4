@@ -4,8 +4,8 @@ import mysql.connector
 import configparser
 
 config = configparser.ConfigParser()
-config.read('/home/ubuntu/git/SD_Group_4/config.ini')
-#config.read('/Users/dmallon/Desktop/GitHubRepositories/SD_Group_4/config.ini')
+#config.read('/home/ubuntu/git/SD_Group_4/config.ini')
+config.read('/Users/eoin/Documents/GitHub/SD_Group_4/config.ini')
 
 google_maps_api_key = config.get('api_keys', 'GOOGLE_MAPS_API_KEY')
 db_host = config.get('Database', 'db_host')
